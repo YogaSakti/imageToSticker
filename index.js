@@ -5,7 +5,7 @@ const mime = require('mime-types')
 
 const startServer = async (from) => {
     create('Imperial', {
-            executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+            browserRevision: '737027',
             headless: true,
             qrTimeout: 40,
             authTimeout: 40,
