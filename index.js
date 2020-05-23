@@ -3,9 +3,18 @@ const fs = require('fs-extra')
 const moment = require('moment')
 const mime = require('mime-types')
 
+let opsys = process.platform;
+if (opsys == "win32" || opsys == "win64") {
+    opsys = `executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'`;
+} else if (opsys == "linux") {
+    opsys = `browserRevision: '737027'`;
+} else if (opsys == "darwin") {
+    opsys = `executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',`;
+}
+
 const startServer = async (from) => {
     create('Imperial', {
-            browserRevision: '737027',
+            opsys,
             headless: true,
             qrTimeout: 40,
             authTimeout: 40,
