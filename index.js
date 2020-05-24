@@ -45,7 +45,7 @@ create('Imperial', serverOption)
 async function msgHandler (client, message) {
     try {
         // console.log(message)
-        const { type, body, from, t, sender, isGroupMsg, chat, caption, isMedia, mimetype } = message
+        const { type, body, from, t, sender, isGroupMsg, chat, caption, isMedia, mimetype, quotedMsg } = message
         const { id, pushname } = sender
         const { name } = chat
         const time = moment(t * 1000).format('DD/MM HH:mm:ss')
@@ -61,7 +61,11 @@ async function msgHandler (client, message) {
                 case '#sticker':
                     if (isMedia) {
                         const mediaData = await decryptMedia(message)
-                        const imageBase64 = `data:${message.mimetype};base64,${mediaData.toString('base64')}`
+                        const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
+                        await client.sendImageAsSticker(from, imageBase64)
+                    } else if (quotedMsg && quotedMsg.type == 'image') {
+                        const mediaData = await decryptMedia(quotedMsg)
+                        const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                         await client.sendImageAsSticker(from, imageBase64)
                     } else {
                         client.sendText(from, 'Tidak ada gambar! Untuk membuat sticker kirim gambar dengan caption #sticker ')
