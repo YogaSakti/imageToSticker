@@ -1,15 +1,15 @@
 const { create, decryptMedia } = require('@open-wa/wa-automate')
 const fs = require('fs-extra')
 const moment = require('moment')
-const mime = require('mime-types')
 
 const serverOption = {
-    headless: true,
-    qrTimeout: 40,
-    authTimeout: 40,
+    headless: false,
+    qrRefreshS: 20,
+    qrTimeout: 0,
+    authTimeout: 0,
     autoRefresh: true,
-    qrRefreshS: 15,
     devtools: false,
+    cacheEnabled:false,
     chromiumArgs: [
       '--no-sandbox',
       '--disable-setuid-sandbox'
@@ -32,7 +32,7 @@ create('Imperial', serverOption)
 
             // Force it to keep the current session
             client.onStateChanged(state => {
-                console.log('[stateChanged]', state)
+                console.log('[State Changed]', state)
                 if (state === 'CONFLICT') client.forceRefocus()
             })
 
@@ -49,16 +49,17 @@ async function msgHandler (client, message) {
         const { id, pushname } = sender
         const { name } = chat
         const time = moment(t * 1000).format('DD/MM HH:mm:ss')
-        const commands = ['#sticker', '#halo']
+        const commands = ['#sticker', '#stiker', '#halo']
         const cmds = commands.map(x => x + '\\b').join('|')
         const cmd = type === 'chat' ? body.match(new RegExp(cmds, 'gi')) : type === 'image' && caption ? caption.match(new RegExp(cmds, 'gi')) : ''
 
         if (cmd) {
-            if (!isGroupMsg) console.log('[EXEC]', color(time, 'yellow'), color(cmd[0]), 'from', color(pushname))
-            if (isGroupMsg) console.log('[EXEC]', color(time, 'yellow'), color(cmd[0]), 'from', color(pushname), 'in', color(name))
+            if (!isGroupMsg) console.log(color('[EXEC]'), color(time, 'yellow'), color(cmd[0]), 'from', color(pushname))
+            if (isGroupMsg) console.log(color('[EXEC]'), color(time, 'yellow'), color(cmd[0]), 'from', color(pushname), 'in', color(name))
             const args = body.trim().split(' ')
             switch (cmd[0]) {
                 case '#sticker':
+                case '#stiker':
                     if (isMedia) {
                         const mediaData = await decryptMedia(message)
                         const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
@@ -67,8 +68,17 @@ async function msgHandler (client, message) {
                         const mediaData = await decryptMedia(quotedMsg)
                         const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                         await client.sendImageAsSticker(from, imageBase64)
+                    } else if (args.length == 2) {
+                        var isUrl = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
+                        const url = args[1]
+                        if (url.match(isUrl)) {
+                            await client.sendStickerfromUrl(from, url, { method: 'get' })
+                                .catch(err => console.log('Caught exception: ', err))
+                        } else {
+                            client.sendText(from, 'Url yang kamu kirim tidak valid')
+                        }
                     } else {
-                        client.sendText(from, 'Tidak ada gambar! Untuk membuat sticker kirim gambar dengan caption #sticker ')
+                        client.sendText(from, 'Tidak ada gambar! Untuk membuat sticker kirim gambar dengan caption #stiker')
                     }
                     break
                 case '#halo':
@@ -76,13 +86,17 @@ async function msgHandler (client, message) {
                     break
             }
         } else {
-          if (!isGroupMsg) console.log(color('[RECV]'), color(time, 'yellow'), 'Message from', color(pushname))
-            if (isGroupMsg) console.log(color('[RECV]'), color(time, 'yellow'), 'Message from', color(pushname), 'in', color(name))
+            if (!isGroupMsg) console.log('[RECV]', color(time, 'yellow'), 'Message from', color(pushname))
+            if (isGroupMsg) console.log('[RECV]', color(time, 'yellow'), 'Message from', color(pushname), 'in', color(name))
         }
     } catch (err) {
         console.log(color('[ERROR]', 'red'), err)
     }
 }
+
+process.on('Something went wrong', function (err) {
+    console.log('Caught exception: ', err);
+  });
 
 function color (text, color) {
   switch (color) {
