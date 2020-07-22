@@ -3,7 +3,7 @@ const fs = require('fs-extra')
 const moment = require('moment')
 
 const serverOption = {
-    headless: false,
+    headless: true,
     qrRefreshS: 20,
     qrTimeout: 0,
     authTimeout: 0,
