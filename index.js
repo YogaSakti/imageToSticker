@@ -92,7 +92,7 @@ async function msgHandler (client, message) {
                         if (url.match(isUrl) && url.includes('tiktok.com')) {
                             const videoMeta = await tiktok(url)
                             const filename = videoMeta.authorMeta.name + '.mp4'
-                            await client.sendFile(from, videoMeta.videobase64, filename, videoMeta.videoUrl ? '' : 'Maaf, video tanpa watermark tidak tersedia')
+                            await client.sendFile(from, videoMeta.videobase64, filename, videoMeta.NoWaterMark ? '' : 'Maaf, video tanpa watermark tidak tersedia')
                                 .then(await client.sendText(from, `Metadata:\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: bantu aku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`))
                                 .catch(err => console.log('Caught exception: ', err))
                         } else {
