@@ -78,7 +78,6 @@ async function msgHandler (client, message) {
                         const url = args[1]
                         if (url.match(isUrl)) {
                             await client.sendStickerfromUrl(from, url, { method: 'get' })
-                                .then(client.sendText(from, 'Donasi: bantu aku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor.'))
                                 .catch(err => console.log('Caught exception: ', err))
                         } else {
                             client.sendText(from, 'Maaf, Url yang kamu kirim tidak valid')
