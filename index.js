@@ -1,6 +1,7 @@
 const { create, decryptMedia } = require('@open-wa/wa-automate')
 const fs = require('fs-extra')
 const moment = require('moment')
+const tiktok = require('./lib/tiktok')
 
 const serverOption = {
     headless: true,
@@ -28,11 +29,12 @@ serverOption['executablePath'] = '/Applications/Google Chrome.app/Contents/MacOS
 const startServer = async (from) => {
 create('Imperial', serverOption)
         .then(client => {
+            console.log('[DEV] Red Emperor')
             console.log('[SERVER] Server Started!')
 
             // Force it to keep the current session
             client.onStateChanged(state => {
-                console.log('[State Changed]', state)
+                console.log('[Client State]', state)
                 if (state === 'CONFLICT') client.forceRefocus()
             })
 
@@ -44,12 +46,11 @@ create('Imperial', serverOption)
 
 async function msgHandler (client, message) {
     try {
-        // console.log(message)
         const { type, body, from, t, sender, isGroupMsg, chat, caption, isMedia, mimetype, quotedMsg } = message
         const { id, pushname } = sender
         const { name } = chat
         const time = moment(t * 1000).format('DD/MM HH:mm:ss')
-        const commands = ['#sticker', '#stiker', '#halo']
+        const commands = ['#menu','#help','#sticker', '#stiker', '#tiktok']
         const cmds = commands.map(x => x + '\\b').join('|')
         const cmd = type === 'chat' ? body.match(new RegExp(cmds, 'gi')) : type === 'image' && caption ? caption.match(new RegExp(cmds, 'gi')) : ''
 
@@ -57,7 +58,12 @@ async function msgHandler (client, message) {
             if (!isGroupMsg) console.log(color('[EXEC]'), color(time, 'yellow'), color(cmd[0]), 'from', color(pushname))
             if (isGroupMsg) console.log(color('[EXEC]'), color(time, 'yellow'), color(cmd[0]), 'from', color(pushname), 'in', color(name))
             const args = body.trim().split(' ')
+            const isUrl = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
             switch (cmd[0]) {
+                case '#menu':
+                case '#help':
+                    client.sendText(from, 'Menu: \n1. #sticker / #stiker: kirim gambar dengan caption atau balas gambar yang sudah dikirim. \n2. #sticker / #stiker spasi url gambar (contoh: #stiker https://avatars2.githubusercontent.com/u/24309806) \n3. #tiktok spasi url (contoh: #tiktok https://www.tiktok.com/@yogaGanteng/video/685521...)')
+                    break
                 case '#sticker':
                 case '#stiker':
                     if (isMedia) {
@@ -69,20 +75,31 @@ async function msgHandler (client, message) {
                         const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                         await client.sendImageAsSticker(from, imageBase64)
                     } else if (args.length == 2) {
-                        var isUrl = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
                         const url = args[1]
                         if (url.match(isUrl)) {
                             await client.sendStickerfromUrl(from, url, { method: 'get' })
+                                .then(client.sendText(from, 'Donasi: bantu aku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor.'))
                                 .catch(err => console.log('Caught exception: ', err))
                         } else {
-                            client.sendText(from, 'Url yang kamu kirim tidak valid')
+                            client.sendText(from, 'Maaf, Url yang kamu kirim tidak valid')
                         }
                     } else {
                         client.sendText(from, 'Tidak ada gambar! Untuk membuat sticker kirim gambar dengan caption #stiker')
                     }
                     break
-                case '#halo':
-                        client.sendText(from, 'Hai')
+                case '#tiktok':
+                    if (args.length == 2) {
+                        const url = args[1]
+                        if (url.match(isUrl) && url.includes('tiktok.com')) {
+                            const videoMeta = await tiktok(url)
+                            const filename = videoMeta.authorMeta.name + '.mp4'
+                            await client.sendFile(from, videoMeta.videobase64, filename, videoMeta.videoUrl ? '' : 'Maaf, video tanpa watermark tidak tersedia')
+                                .then(await client.sendText(from, `Metadata:\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: bantu aku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`))
+                                .catch(err => console.log('Caught exception: ', err))
+                        } else {
+                            client.sendText(from, 'Maaf, Url yang kamu kirim tidak valid')
+                        }
+                    }
                     break
             }
         } else {
