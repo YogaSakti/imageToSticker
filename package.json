@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@open-wa/wa-automate": "^1.9.103",
+    "fbvideos": "^1.0.2",
     "fs-extra": "^9.0.1",
     "moment": "^2.27.0",
     "node-fetch": "^2.6.0",
