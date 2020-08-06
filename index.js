@@ -95,7 +95,7 @@ async function msgHandler (client, message) {
                             .then((videoMeta) => {
                                 const filename = videoMeta.authorMeta.name + '.mp4'
                                 client.sendFile(from, videoMeta.videobase64, filename, videoMeta.NoWaterMark ? '' : '⚠ Video tanpa watermark tidak tersedia.')
-                                    .then(() => client.sendText(from, `Metadata:\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: bantu aku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`))
+                                    .then(() => client.sendText(from, `Metadata:\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`))
                                     .catch(err => console.log('Caught exception: ', err))
                             }).catch((err) => {
                                 client.sendText(from, 'Gagal mengambil metadata, link yang kamu kirim tidak valid')
@@ -119,7 +119,7 @@ async function msgHandler (client, message) {
                                             client.sendText(from, `Error, ` + err)
                                         });
                                 }
-                                client.sendText(from, `Link Download:\n${content.join('\n')}`)
+                                client.sendText(from, `Link Download:\n${content.join('\n')} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
                             }).catch((err) => {
                                 console.error(err)
                                 if (err == 'Not a video') return client.sendText(from, `Error, tidak ada video di link yang kamu kirim`)
@@ -134,18 +134,14 @@ async function msgHandler (client, message) {
                         if (!url.match(isUrl) && !url.includes('twitter.com') || url.includes('t.co')) return client.sendText(from, 'Maaf, url yang kamu kirim tidak valid')
                         twitter(url)
                             .then(async (videoMeta) => {
-                                const find = videoMeta.findIndex(x => x.content_type === 'application/x-mpegURL')
-                                    .then((res) => res.splice(find, 1))
-                                    .then((res) => res.sort((a, b) => b.bitrate - a.bitrate))
-                                    .then(async () => {
-                                        try {
-                                            const result = await urlShortener(content[0].url)
-                                            console.log('Shortlink: ' + result.shortLink)
-                                            client.sendText(from, `Link Download: ${result.shortLink}`)
-                                        } catch (err) {
-                                            client.sendText(from, `Error, ` + err)
-                                        }
-                                    })
+                                try {
+                                    const content = videoMeta.splice(videoMeta.findIndex(x => x.content_type !== 'video/mp4'), 1).sort((a, b) => b.bitrate - a.bitrate)
+                                    const result = await urlShortener(content[0].url)
+                                    console.log('Shortlink: ' + result.shortLink)
+                                    client.sendText(from, `Link Download: ${result.shortLink} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
+                                } catch (err) {
+                                    client.sendText(from, `Error, ` + err)
+                                }
                             }).catch((err) => {
                                 console.log(err)
                                 client.sendText(from, `Maaf, link tidak valid atau tidak ada video di link yang kamu kirim`)
@@ -165,7 +161,7 @@ async function msgHandler (client, message) {
                                         console.log('Shortlink: ' + shorthd.shortLink)
                                         const shortsd = await urlShortener(sd)
                                         console.log('Shortlink: ' + shortsd.shortLink)
-                                        client.sendText(from, `Link Download: \nHD Quality: ${shorthd.shortLink} \nSD Quality: ${shortsd.shortLink}`)
+                                        client.sendText(from, `Link Download: \nHD Quality: ${shorthd.shortLink} \nSD Quality: ${shortsd.shortLink} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
                                     } catch (err) {
                                         client.sendText(from, `Error, ` + err)
                                     }
