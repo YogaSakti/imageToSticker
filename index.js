@@ -1,6 +1,6 @@
 const { create, decryptMedia } = require('@open-wa/wa-automate')
 const moment = require('moment')
-const {tiktok, instagram, twitter} = require('./lib/dl-video')
+const {tiktok, instagram, twitter, facebook} = require('./lib/dl-video')
 const urlShortener = require('./lib/shortener')
 const color = require("./lib/color")
 
@@ -46,12 +46,11 @@ create('Imperial', serverOption)
 
 async function msgHandler (client, message) {
     try {
-        console.log(message)
         const { type, body, id, from, t, sender, isGroupMsg, chat, caption, isMedia, mimetype, quotedMsg } = message
         const { pushname } = sender
         const { formattedTitle } = chat
         const time = moment(t * 1000).format('DD/MM HH:mm:ss')
-        const commands = ['#menu','#help','#sticker', '#stiker', '#tiktok', '#ig', '#instagram', '#twt', '#twitter']
+        const commands = ['#menu','#help','#sticker', '#stiker', '#tiktok', '#ig', '#instagram', '#twt', '#twitter', '#fb', '#facebook']
         const cmds = commands.map(x => x + '\\b').join('|')
         const cmd = type === 'chat' ? body.match(new RegExp(cmds, 'gi')) : type === 'image' && caption ? caption.match(new RegExp(cmds, 'gi')) : ''
 
@@ -96,7 +95,7 @@ async function msgHandler (client, message) {
                             .then((videoMeta) => {
                                 const filename = videoMeta.authorMeta.name + '.mp4'
                                 client.sendFile(from, videoMeta.videobase64, filename, videoMeta.NoWaterMark ? '' : '⚠ Video tanpa watermark tidak tersedia.')
-                                    .then(async () => await client.sendText(from, `Metadata:\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: bantu aku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`))
+                                    .then(() => client.sendText(from, `Metadata:\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: bantu aku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`))
                                     .catch(err => console.log('Caught exception: ', err))
                             }).catch((err) => {
                                 client.sendText(from, 'Gagal mengambil metadata, link yang kamu kirim tidak valid')
@@ -132,7 +131,7 @@ async function msgHandler (client, message) {
                 case '#twitter':
                     if (args.length == 2) {
                         const url = args[1]
-                        if (!url.match(isUrl) && !url.includes('twitter.com') || url.includes('t.co')) return client.sendText(from, 'Maaf, Url yang kamu kirim tidak valid')
+                        if (!url.match(isUrl) && !url.includes('twitter.com') || url.includes('t.co')) return client.sendText(from, 'Maaf, url yang kamu kirim tidak valid')
                         twitter(url)
                             .then(async (videoMeta) => {
                                 const find = videoMeta.findIndex(x => x.content_type === 'application/x-mpegURL')
@@ -153,6 +152,29 @@ async function msgHandler (client, message) {
                             });
                     }
                     break
+                    case '#fb':
+                    case '#facebook':
+                        if (args.length == 2) {
+                            const url = args[1]
+                            if (!url.match(isUrl) && !url.includes('facebook.com')) return client.sendText(from, 'Maaf, url yang kamu kirim tidak valid')
+                            facebook(url)
+                                .then(async (videoMeta) => {
+                                    const {hd, sd} = videoMeta
+                                    try {
+                                        const shorthd = await urlShortener(hd)
+                                        console.log('Shortlink: ' + shorthd.shortLink)
+                                        const shortsd = await urlShortener(sd)
+                                        console.log('Shortlink: ' + shortsd.shortLink)
+                                        client.sendText(from, `Link Download: \nHD Quality: ${shorthd.shortLink} \nSD Quality: ${shortsd.shortLink}`)
+                                    } catch (err) {
+                                        client.sendText(from, `Error, ` + err)
+                                    }
+                                })
+                                .catch((err) => {
+                                    client.sendText(from, `Error, url tidak valid atau tidak memuat video`)
+                                })
+                        }
+                        break
             }
         } else {
             if (!isGroupMsg) console.log('[RECV]', color(time, 'yellow'), 'Message from', color(pushname))
