@@ -3,6 +3,7 @@ const moment = require('moment')
 const {tiktok, instagram, twitter, facebook} = require('./lib/dl-video')
 const urlShortener = require('./lib/shortener')
 const color = require("./lib/color")
+const { video } = require('tiktok-scraper')
 
 const serverOption = {
     headless: true,
@@ -161,19 +162,19 @@ async function msgHandler (client, message) {
                             if (!url.match(isUrl) && !url.includes('facebook.com')) return client.sendText(from, 'Maaf, url yang kamu kirim tidak valid')
                             facebook(url)
                                 .then(async (videoMeta) => {
-                                    const {title, hd, sd} = videoMeta
+                                    console.log(videoMeta)
                                     try {
-                                        const shorthd = await urlShortener(hd)
+                                        const shorthd = videoMeta.hd ? await urlShortener(videoMeta.hd) : 'Tidak Tersedia'
                                         console.log('Shortlink: ' + shorthd)
-                                        const shortsd = await urlShortener(sd)
+                                        const shortsd = videoMeta.sd ? await urlShortener(videoMeta.sd) : 'Tidak Tersedia'
                                         console.log('Shortlink: ' + shortsd)
-                                        client.sendText(from, `Title: ${title} \nLink Download: \nHD Quality: ${shorthd} \nSD Quality: ${shortsd} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
+                                        client.sendText(from, `Title: ${videoMeta.title} \nLink Download: \nHD Quality: ${shorthd} \nSD Quality: ${shortsd} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
                                     } catch (err) {
                                         client.sendText(from, `Error, ` + err)
                                     }
                                 })
                                 .catch((err) => {
-                                    client.sendText(from, `Error, url tidak valid atau tidak memuat video`)
+                                    client.sendText(from, `Error, url tidak valid atau tidak memuat video \n${err}`)
                                 })
                         }
                         break
