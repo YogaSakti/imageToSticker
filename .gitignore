@@ -2,3 +2,5 @@ node_modules
 Imperial.data.json
 debug.log
 lib/twitter.js
+
+app.js

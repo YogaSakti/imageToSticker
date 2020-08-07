@@ -94,7 +94,7 @@ async function msgHandler (client, message) {
                         await tiktok(url)
                             .then((videoMeta) => {
                                 const filename = videoMeta.authorMeta.name + '.mp4'
-                                client.sendFile(from, videoMeta.videobase64, filename, videoMeta.NoWaterMark ? '' : '⚠ Video tanpa watermark tidak tersedia.')
+                                client.sendFileFromUrl(from,videoMeta.url, filename, videoMeta.NoWaterMark ? '' : '⚠ Video tanpa watermark tidak tersedia.')
                                     .then(() => client.sendText(from, `Metadata:\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`))
                                     .catch(err => console.log('Caught exception: ', err))
                             }).catch((err) => {
@@ -111,10 +111,10 @@ async function msgHandler (client, message) {
                             .then(async (videoMeta) => {
                                 const content = []
                                 for (var i = 0; i < videoMeta.length; i++) {
-                                    await urlShortener(videoMeta[i])
+                                    await urlShortener(videoMeta[i].video)
                                         .then((result) => {
-                                            console.log('Shortlink: ' + result.shortLink)
-                                            content.push(`${i+1}. ${result.shortLink}`)
+                                            console.log('Shortlink: ' + result)
+                                            content.push(`${i+1}. ${result}`)
                                         }).catch((err) => {
                                             client.sendText(from, `Error, ` + err)
                                         });
@@ -135,10 +135,16 @@ async function msgHandler (client, message) {
                         twitter(url)
                             .then(async (videoMeta) => {
                                 try {
-                                    const content = videoMeta.splice(videoMeta.findIndex(x => x.content_type !== 'video/mp4'), 1).sort((a, b) => b.bitrate - a.bitrate)
-                                    const result = await urlShortener(content[0].url)
-                                    console.log('Shortlink: ' + result.shortLink)
-                                    client.sendText(from, `Link Download: ${result.shortLink} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
+                                    if (videoMeta.type == 'video') {
+                                        const content = videoMeta.variants.filter(x => x.content_type !== 'application/x-mpegURL').sort((a, b) => b.bitrate - a.bitrate)
+                                        const result = await urlShortener(content[0].url)
+                                        console.log('Shortlink: ' + result)
+                                        client.sendFileFromUrl(from, content[0].url, 'TwitterVideo.mp4', `Link Download: ${result} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
+                                    } else if (videoMeta.type == 'photo') {
+                                        for (var i = 0; i < videoMeta.variants.length; i++) {
+                                            await client.sendFileFromUrl(from, videoMeta.variants[i], videoMeta.variants[i].split('/media/')[1], '')
+                                        }
+                                    }
                                 } catch (err) {
                                     client.sendText(from, `Error, ` + err)
                                 }
@@ -148,20 +154,20 @@ async function msgHandler (client, message) {
                             });
                     }
                     break
-                    case '#fb':
-                    case '#facebook':
+                case '#fb':
+                case '#facebook':
                         if (args.length == 2) {
                             const url = args[1]
                             if (!url.match(isUrl) && !url.includes('facebook.com')) return client.sendText(from, 'Maaf, url yang kamu kirim tidak valid')
                             facebook(url)
                                 .then(async (videoMeta) => {
-                                    const {hd, sd} = videoMeta
+                                    const {title, hd, sd} = videoMeta
                                     try {
                                         const shorthd = await urlShortener(hd)
-                                        console.log('Shortlink: ' + shorthd.shortLink)
+                                        console.log('Shortlink: ' + shorthd)
                                         const shortsd = await urlShortener(sd)
-                                        console.log('Shortlink: ' + shortsd.shortLink)
-                                        client.sendText(from, `Link Download: \nHD Quality: ${shorthd.shortLink} \nSD Quality: ${shortsd.shortLink} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
+                                        console.log('Shortlink: ' + shortsd)
+                                        client.sendText(from, `Title: ${title} \nLink Download: \nHD Quality: ${shorthd} \nSD Quality: ${shortsd} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
                                     } catch (err) {
                                         client.sendText(from, `Error, ` + err)
                                     }
