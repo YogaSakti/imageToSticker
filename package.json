@@ -13,11 +13,10 @@
     "moment": "^2.27.0",
     "node-fetch": "^2.6.0",
     "tiktok-scraper": "^1.3.0",
-    "util": "^0.12.3"
+    "util": "^0.12.3",
+    "video-url-link": "git+https://github.com/YogaSakti/video-url-link.git"
   },
   "devDependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "twitter-lite": "^0.14.0",
-    "video-url-link": "git+https://github.com/YogaSakti/video-url-link.git"
+    "twitter-lite": "^0.14.0"
   }
 }
