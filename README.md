@@ -49,6 +49,6 @@ Install the dependencies:
 after running it you need to scan the qr
 
 ### Troubleshooting
-Make sure all the necessary dependencies are installed.
-https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md
+Make sure all the necessary dependencies are installed: https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md
+
 Linux & C9 Fix: https://trakteer.id/red-emperor/showcase/fix-whatsapp-bot-sticker-creator-di-c9-lpwel
