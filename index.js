@@ -54,12 +54,13 @@ async function msgHandler (client, message) {
         const commands = ['#menu','#help','#sticker', '#stiker', '#tiktok', '#ig', '#instagram', '#twt', '#twitter', '#fb', '#facebook']
         const cmds = commands.map(x => x + '\\b').join('|')
         const cmd = type === 'chat' ? body.match(new RegExp(cmds, 'gi')) : type === 'image' && caption ? caption.match(new RegExp(cmds, 'gi')) : ''
+        const args = body.trim().split(' ')
+        const isUrl = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
+        const uaOverride = "WhatsApp/2.2029.4 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36";
 
         if (cmd) {
             if (!isGroupMsg) console.log(color('[EXEC]'), color(time, 'yellow'), color(cmd[0]), 'from', color(pushname))
             if (isGroupMsg) console.log(color('[EXEC]'), color(time, 'yellow'), color(cmd[0]), 'from', color(pushname), 'in', color(formattedTitle))
-            const args = body.trim().split(' ')
-            const isUrl = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
             switch (cmd[0]) {
                 case '#menu':
                 case '#help':
@@ -68,7 +69,7 @@ async function msgHandler (client, message) {
                 case '#sticker':
                 case '#stiker':
                     if (isMedia) {
-                        const mediaData = await decryptMedia(message)
+                        const mediaData = await decryptMedia(message, uaOverride)
                         const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                         await client.sendImageAsSticker(from, imageBase64)
                     } else if (quotedMsg && quotedMsg.type == 'image') {
@@ -92,11 +93,12 @@ async function msgHandler (client, message) {
                     if (args.length == 2) {
                         const url = args[1]
                         if (!url.match(isUrl) && !url.includes('tiktok.com')) return client.sendText(from, 'Maaf, link yang kamu kirim tidak valid')
+                        await client.sendText(from, "*Scraping Metadata...*");
                         await tiktok(url)
                             .then((videoMeta) => {
                                 const filename = videoMeta.authorMeta.name + '.mp4'
                                 const caps = `*Metadata:*\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`
-                                client.sendFileFromUrl(from,videoMeta.url, filename, videoMeta.NoWaterMark ? caps : `⚠ Video tanpa watermark tidak tersedia. \n\n${caps}`)
+                                client.sendFile(from,videoMeta.urlbase64, filename, videoMeta.NoWaterMark ? caps : `⚠ Video tanpa watermark tidak tersedia. \n\n${caps}`)
                                     .catch(err => console.log('Caught exception: ', err))
                             }).catch((err) => {
                                 client.sendText(from, 'Gagal mengambil metadata, link yang kamu kirim tidak valid')
@@ -108,6 +110,7 @@ async function msgHandler (client, message) {
                     if (args.length == 2) {
                         const url = args[1]
                         if (!url.match(isUrl) && !url.includes('instagram.com')) return client.sendText(from, 'Maaf, link yang kamu kirim tidak valid')
+                        await client.sendText(from, "*Scraping Metadata...*");
                         instagram(url)
                             .then(async (videoMeta) => {
                                 const content = []
@@ -133,6 +136,7 @@ async function msgHandler (client, message) {
                     if (args.length == 2) {
                         const url = args[1]
                         if (!url.match(isUrl) && !url.includes('twitter.com') || url.includes('t.co')) return client.sendText(from, 'Maaf, url yang kamu kirim tidak valid')
+                        await client.sendText(from, "*Scraping Metadata...*");
                         twitter(url)
                             .then(async (videoMeta) => {
                                 try {
@@ -160,21 +164,29 @@ async function msgHandler (client, message) {
                         if (args.length == 2) {
                             const url = args[1]
                             if (!url.match(isUrl) && !url.includes('facebook.com')) return client.sendText(from, 'Maaf, url yang kamu kirim tidak valid')
+                            await client.sendText(from, "*Scraping Metadata...*");
                             facebook(url)
                                 .then(async (videoMeta) => {
-                                    console.log(videoMeta)
                                     try {
-                                        const shorthd = videoMeta.hd ? await urlShortener(videoMeta.hd) : 'Tidak Tersedia'
-                                        console.log('Shortlink: ' + shorthd)
-                                        const shortsd = videoMeta.sd ? await urlShortener(videoMeta.sd) : 'Tidak Tersedia'
-                                        console.log('Shortlink: ' + shortsd)
-                                        client.sendText(from, `Title: ${videoMeta.title} \nLink Download: \nHD Quality: ${shorthd} \nSD Quality: ${shortsd} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
+                                        const title = videoMeta.response.title
+                                        const thumbnail = videoMeta.response.thumbnail
+                                        const links = videoMeta.response.links
+                                        const shorts = []
+                                        for (var i = 0; i < links.length; i++) {
+                                            const shortener = await urlShortener(links[i].url)
+                                            console.log('Shortlink: ' + shortener)
+                                            links[i]['short'] = shortener
+                                            shorts.push(links[i])
+                                        }
+                                        const link = shorts.map((x) => `${x.resolution} Quality: ${x.short}`) 
+                                        const caption = `Text: ${title} \nLink Download: \n${link.join('\n')} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`
+                                        client.sendFileFromUrl(from,thumbnail, 'videos.jpg', caption )
                                     } catch (err) {
                                         client.sendText(from, `Error, ` + err)
                                     }
                                 })
                                 .catch((err) => {
-                                    client.sendText(from, `Error, url tidak valid atau tidak memuat video \n${err}`)
+                                    client.sendText(from, `Error, url tidak valid atau tidak memuat video \n\n${err}`)
                                 })
                         }
                         break
