@@ -1,4 +1,6 @@
+<div align="center">
 # Whatsapp Bot - sticker creator
+</div>
 
 ## Features
 
