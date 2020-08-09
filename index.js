@@ -52,8 +52,7 @@ async function msgHandler (client, message) {
         const { formattedTitle } = chat
         const time = moment(t * 1000).format('DD/MM HH:mm:ss')
         const commands = ['#menu','#help','#sticker', '#stiker', '#tiktok', '#ig', '#instagram', '#twt', '#twitter', '#fb', '#facebook']
-        const cmds = commands.map(x => x + '\\b').join('|')
-        const cmd = type === 'chat' ? body.match(new RegExp(cmds, 'gi')) : type === 'image' && caption ? caption.match(new RegExp(cmds, 'gi')) : ''
+        const cmd = type === 'chat' ? body.split(' ') : type === 'image' && caption ? caption.split(' ') : ''
         const args = body.trim().split(' ')
         const isUrl = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
         const uaOverride = "WhatsApp/2.2029.4 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36";
