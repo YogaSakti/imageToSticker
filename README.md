@@ -24,7 +24,6 @@
 |       ✅       | Reply A Photo                    |
 |       ✅       | Image Url                        |
 
----
 | Downloader |                     Feature                |
 | :------------: | :---------------------------------------------: |
 |       ✅        |   Tiktok Downloader (No WM & WM)              |
@@ -32,7 +31,6 @@
 |       ✅        |   Facebook Video Downloader (SD & HD)         |
 |      Error      |   Instagram Video Downloader                  |
 
----
 | Other  |                     Feature                     |
 | :------------: | :---------------------------------------------: |
 |       ✅        |   get a meme from random subreddit            |
@@ -40,9 +38,10 @@
 ## To-Do
  - Fix IG Video Downloader
  - More Refactoring
+ 
+---
 
-
-# Getting Started
+## Getting Started
 
 This project require NodeJS v12.
 
