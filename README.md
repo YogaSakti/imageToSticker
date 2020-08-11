@@ -2,7 +2,19 @@
  
 # Whatsapp Bot - sticker creator
 [![CodeFactor](https://www.codefactor.io/repository/github/yogasakti/imagetosticker/badge)](https://www.codefactor.io/repository/github/yogasakti/imagetosticker)
+<details>
+ <summary>🥟 Buy me a Dimsum!</summary>
+
+ [Saweria](https://saweria.co/donate/yogasakti)
+ 
+ [Trakteer](https://trakteer.id/red-emperor)
+ 
+ [Paypal.me](paypal.me/red3mperor)
+ 
+</details>
 </div>
+
+
 
 ## Features
 
