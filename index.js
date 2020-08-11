@@ -75,52 +75,52 @@ async function msgHandler (client, message) {
         const uaOverride = 'WhatsApp/2.2029.4 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
 
         switch (command) {
-            case 'menu':
-            case 'help': {
-                const text = `👋️ Hi, ${pushname}! \n\nPrefix = #\n\nUsable Commands!✨\n\n*STICKER*\nCMD: #sticker\nDescription: Converts image into sticker, kirim gambar dengan caption #sticker atau balas gambar yang sudah dikirim dengan #sticker\n\nCMD: #sticker <url gambar>\nDescription: Converts image url into sticker\n\n*Downloader* (Video only)\nCMD: #tiktok <post/video url>\nDescription: Return a Tiktok video\n\nCMD: #fb <post/video url>\nDescription: Return a Facebook video download link\n\nCMD: #ig <post/video url>\nDescription: Return a Instagram video download link\n\nCMD: #twt <post/video url>\nDescription: Return a Twitter video download link\n\nCMD: #tnc\nDescription: Displays the Terms and Conditions\n\nIf yore having any trouble with the bot, please state your issue at my github issues page\n\nHope you have a great day!✨`
-                client.sendText(from, text)
-                break
-            }
-            case 'sticker':
-            case 'stiker':
-                if (isMedia) {
-                    const mediaData = await decryptMedia(message, uaOverride)
-                    const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
-                    await client.sendImageAsSticker(from, imageBase64)
-                } else if (quotedMsg && quotedMsg.type == 'image') {
-                    const mediaData = await decryptMedia(quotedMsg)
-                    const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
-                    await client.sendImageAsSticker(from, imageBase64)
-                } else if (args.length == 1) {
-                    const url = args[0]
-                    if (url.match(isUrl)) {
-                        await client.sendStickerfromUrl(from, url)
-                            .then((r) => {
-                                if (!r) client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
-                            })
-                            .catch((err) => console.log('Caught exception: ', err))
-                    } else {
-                        client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id)
-                    }
-                } else {
-                    client.reply(from, 'Tidak ada gambar! Untuk membuka daftar perintah kirim #menu', id)
-                }
-                break
-            case 'tiktok': {
-                if (args.length !== 1) return client.reply(from, 'Maaf, link yang kamu kirim tidak valid', id)
+        case 'menu':
+        case 'help': {
+            const text = `👋️ Hi, ${pushname}! \n\nPrefix = #\n\nUsable Commands!✨\n\n*STICKER*\nCMD: #sticker\nDescription: Converts image into sticker, kirim gambar dengan caption #sticker atau balas gambar yang sudah dikirim dengan #sticker\n\nCMD: #sticker <url gambar>\nDescription: Converts image url into sticker\n\n*Downloader* (Video only)\nCMD: #tiktok <post/video url>\nDescription: Return a Tiktok video\n\nCMD: #fb <post/video url>\nDescription: Return a Facebook video download link\n\nCMD: #ig <post/video url>\nDescription: Return a Instagram video download link\n\nCMD: #twt <post/video url>\nDescription: Return a Twitter video download link\n\nCMD: #tnc\nDescription: Displays the Terms and Conditions\n\nIf yore having any trouble with the bot, please state your issue at my github issues page\n\nHope you have a great day!✨`
+            client.sendText(from, text)
+            break
+        }
+        case 'sticker':
+        case 'stiker':
+            if (isMedia) {
+                const mediaData = await decryptMedia(message, uaOverride)
+                const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
+                await client.sendImageAsSticker(from, imageBase64)
+            } else if (quotedMsg && quotedMsg.type == 'image') {
+                const mediaData = await decryptMedia(quotedMsg)
+                const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                await client.sendImageAsSticker(from, imageBase64)
+            } else if (args.length == 1) {
                 const url = args[0]
-                if (!url.match(isUrl) && !url.includes('tiktok.com')) return client.reply(from, 'Maaf, link yang kamu kirim tidak valid', id)
-                await client.sendText(from, '*Scraping Metadata...*')
-                await tiktok(url)
-                    .then((videoMeta) => {
-                        const filename = videoMeta.authorMeta.name + '.mp4'
-                        const caps = `*Metadata:*\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`
-                        client.sendFileFromUrl(from, videoMeta.url, filename, videoMeta.NoWaterMark ? caps : `⚠ Video tanpa watermark tidak tersedia. \n\n${caps}`, '', { headers: { 'User-Agent': 'okhttp/4.5.0' } })
-                            .catch(err => console.log('Caught exception: ', err))
-                    }).catch(() => {
-                        client.reply(from, 'Gagal mengambil metadata, link yang kamu kirim tidak valid', id)
-                    })
+                if (url.match(isUrl)) {
+                    await client.sendStickerfromUrl(from, url)
+                        .then((r) => {
+                            if (!r) client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
+                        })
+                        .catch((err) => console.log('Caught exception: ', err))
+                } else {
+                    client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id)
+                }
+            } else {
+                client.reply(from, 'Tidak ada gambar! Untuk membuka daftar perintah kirim #menu', id)
             }
+            break
+        case 'tiktok': {
+            if (args.length !== 1) return client.reply(from, 'Maaf, link yang kamu kirim tidak valid', id)
+            const url = args[0]
+            if (!url.match(isUrl) && !url.includes('tiktok.com')) return client.reply(from, 'Maaf, link yang kamu kirim tidak valid', id)
+            await client.sendText(from, '*Scraping Metadata...*')
+            await tiktok(url)
+                .then((videoMeta) => {
+                    const filename = videoMeta.authorMeta.name + '.mp4'
+                    const caps = `*Metadata:*\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`
+                    client.sendFileFromUrl(from, videoMeta.url, filename, videoMeta.NoWaterMark ? caps : `⚠ Video tanpa watermark tidak tersedia. \n\n${caps}`, '', { headers: { 'User-Agent': 'okhttp/4.5.0' } })
+                        .catch(err => console.log('Caught exception: ', err))
+                }).catch(() => {
+                    client.reply(from, 'Gagal mengambil metadata, link yang kamu kirim tidak valid', id)
+                })
+        }
             break
         case 'ig':
         case 'instagram': {
@@ -146,7 +146,7 @@ async function msgHandler (client, message) {
                     client.reply(from, 'Error, user private atau link salah', id)
                 })
         }
-        break
+            break
         case 'twt':
         case 'twitter': {
             if (args.length !== 1) return client.reply(from, 'Maaf, link yang kamu kirim tidak valid', id)
@@ -173,7 +173,7 @@ async function msgHandler (client, message) {
                     client.sendText(from, 'Maaf, link tidak valid atau tidak ada video di link yang kamu kirim')
                 })
         }
-        break
+            break
         case 'fb':
         case 'facebook': {
             if (args.length !== 1) return client.reply(from, 'Maaf, link yang kamu kirim tidak valid', id)
@@ -204,7 +204,7 @@ async function msgHandler (client, message) {
                     client.reply(from, `Error, url tidak valid atau tidak memuat video \n\n${err}`, id)
                 })
         }
-        break
+            break
         case 'mim':
         case 'memes':
         case 'meme': {
