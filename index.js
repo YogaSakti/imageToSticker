@@ -34,7 +34,7 @@ if (opsys === 'win32' || opsys === 'win64') {
     serverOption.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 }
 
-const startServer = async (from) => {
+const startServer = async () => {
     create('Imperial', serverOption)
         .then(client => {
             console.log('[DEV] Red Emperor')
@@ -76,10 +76,11 @@ async function msgHandler (client, message) {
 
         switch (command) {
             case 'menu':
-            case 'help':
+            case 'help': {
                 const text = `👋️ Hi, ${pushname}! \n\nPrefix = #\n\nUsable Commands!✨\n\n*STICKER*\nCMD: #sticker\nDescription: Converts image into sticker, kirim gambar dengan caption #sticker atau balas gambar yang sudah dikirim dengan #sticker\n\nCMD: #sticker <url gambar>\nDescription: Converts image url into sticker\n\n*Downloader* (Video only)\nCMD: #tiktok <post/video url>\nDescription: Return a Tiktok video\n\nCMD: #fb <post/video url>\nDescription: Return a Facebook video download link\n\nCMD: #ig <post/video url>\nDescription: Return a Instagram video download link\n\nCMD: #twt <post/video url>\nDescription: Return a Twitter video download link\n\nCMD: #tnc\nDescription: Displays the Terms and Conditions\n\nIf yore having any trouble with the bot, please state your issue at my github issues page\n\nHope you have a great day!✨`
                 client.sendText(from, text)
                 break
+            }
             case 'sticker':
             case 'stiker':
                 if (isMedia) {
@@ -116,7 +117,7 @@ async function msgHandler (client, message) {
                         const caps = `*Metadata:*\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`
                         client.sendFileFromUrl(from, videoMeta.url, filename, videoMeta.NoWaterMark ? caps : `⚠ Video tanpa watermark tidak tersedia. \n\n${caps}`, '', { headers: { 'User-Agent': 'okhttp/4.5.0' } })
                             .catch(err => console.log('Caught exception: ', err))
-                    }).catch((_err) => {
+                    }).catch(() => {
                         client.reply(from, 'Gagal mengambil metadata, link yang kamu kirim tidak valid', id)
                     })
             }
@@ -130,7 +131,7 @@ async function msgHandler (client, message) {
             instagram(url)
                 .then(async (videoMeta) => {
                     const content = []
-                    for (var i = 0; i < videoMeta.length; i++) {
+                    for (let i = 0; i < videoMeta.length; i++) {
                         await urlShortener(videoMeta[i].video)
                             .then((result) => {
                                 console.log('Shortlink: ' + result)
@@ -141,7 +142,6 @@ async function msgHandler (client, message) {
                     }
                     client.sendText(from, `Link Download:\n${content.join('\n')} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
                 }).catch((err) => {
-                    console.error(err)
                     if (err == 'Not a video') return client.reply(from, 'Error, tidak ada video di link yang kamu kirim', id)
                     client.reply(from, 'Error, user private atau link salah', id)
                 })
@@ -162,15 +162,14 @@ async function msgHandler (client, message) {
                             console.log('Shortlink: ' + result)
                             client.sendFileFromUrl(from, content[0].url, 'TwitterVideo.mp4', `Link Download: ${result} \n\nDonasi: kamu dapat membantuku beli dimsum dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.`)
                         } else if (videoMeta.type == 'photo') {
-                            for (var i = 0; i < videoMeta.variants.length; i++) {
+                            for (let i = 0; i < videoMeta.variants.length; i++) {
                                 await client.sendFileFromUrl(from, videoMeta.variants[i], videoMeta.variants[i].split('/media/')[1], '')
                             }
                         }
                     } catch (err) {
                         client.sendText(from, 'Error, ' + err)
                     }
-                }).catch((err) => {
-                    console.log(err)
+                }).catch(() => {
                     client.sendText(from, 'Maaf, link tidak valid atau tidak ada video di link yang kamu kirim')
                 })
         }
@@ -188,7 +187,7 @@ async function msgHandler (client, message) {
                         const thumbnail = videoMeta.response.thumbnail
                         const links = videoMeta.response.links
                         const shorts = []
-                        for (var i = 0; i < links.length; i++) {
+                        for (let i = 0; i < links.length; i++) {
                             const shortener = urlShortener(links[i].url)
                             console.log('Shortlink: ' + shortener)
                             links[i].short = shortener
@@ -208,10 +207,11 @@ async function msgHandler (client, message) {
         break
         case 'mim':
         case 'memes':
-        case 'meme':
+        case 'meme': {
             const { title, url } = await fetchMeme()
             await client.sendFileFromUrl(from, `${url}`, 'meme.jpg', `${title}`)
             break
+        }
         default:
             console.log(color('[ERROR]', 'red'), color(time, 'yellow'), 'Unregistered Command from', color(pushname))
             break
