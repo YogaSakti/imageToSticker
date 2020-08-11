@@ -6,24 +6,29 @@
 
 ## Features
 
-| Sticker Creator |                 Feature            |
+| Sticker Creator |                Feature           |
 | :-----------: | :--------------------------------: |
-|       ✅       | Send Photo with Caption |
-|       ✅       | Reply A Photo |
-|       ✅       | Image Url |
+|       ✅       | Send Photo with Caption          |
+|       ✅       | Reply A Photo                    |
+|       ✅       | Image Url                        |
 
 ---
-| Downloader Features |                     Feature                |
+| Downloader |                     Feature                |
 | :------------: | :---------------------------------------------: |
 |       ✅        |   Tiktok Downloader (No WM & WM)              |
 |       ✅        |   Twitter Video Downloader                    |
 |       ✅        |   Facebook Video Downloader (SD & HD)         |
-|       ✅        |   Instagram Video Downloader                  |
+|      Error      |   Instagram Video Downloader                  |
 
+---
+| Other  |                     Feature                     |
+| :------------: | :---------------------------------------------: |
+|       ✅        |   get a meme from random subreddit            |
 
-## Future Features
- - ?
- - ?
+## To-Do
+ - Fix IG Video Downloader
+ - More Refactoring
+
 
 # Getting Started
 
