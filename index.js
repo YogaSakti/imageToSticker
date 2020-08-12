@@ -181,14 +181,14 @@ async function msgHandler (client, message) {
             if (!url.match(isUrl) && !url.includes('facebook.com')) return client.reply(from, 'Maaf, url yang kamu kirim tidak valid', id)
             await client.sendText(from, '*Scraping Metadata...*')
             facebook(url)
-                .then((videoMeta) => {
+                .then(async (videoMeta) => {
                     try {
                         const title = videoMeta.response.title
                         const thumbnail = videoMeta.response.thumbnail
                         const links = videoMeta.response.links
                         const shorts = []
                         for (let i = 0; i < links.length; i++) {
-                            const shortener = urlShortener(links[i].url)
+                            const shortener = await urlShortener(links[i].url)
                             console.log('Shortlink: ' + shortener)
                             links[i].short = shortener
                             shorts.push(links[i])
