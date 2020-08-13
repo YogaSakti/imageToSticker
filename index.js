@@ -102,15 +102,11 @@ async function msgHandler (client, message) {
                 await client.sendImageAsSticker(from, imageBase64)
             } else if (args.length == 1) {
                 const url = args[0]
-                if (url.match(isUrl)) {
-                    await client.sendStickerfromUrl(from, url)
-                        .then((r) => {
-                            if (!r) client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
-                        })
-                        .catch((err) => console.log('Caught exception: ', err))
-                } else {
-                    client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id)
-                }
+                if (!url.match(isUrl)) client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id)
+                await client.sendStickerfromUrl(from, url)
+                    .then((r) => {
+                        if (!r && r !== undefined) client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
+                    })
             } else {
                 client.reply(from, 'Tidak ada gambar! Untuk membuka daftar perintah kirim #menu', id)
             }
