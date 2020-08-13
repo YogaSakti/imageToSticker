@@ -65,7 +65,7 @@ async function msgHandler (client, message) {
         pushname = pushname || verifiedName
         const prefix = '#'
         body = (type == 'chat' && body.startsWith(prefix)) ? body : ((type == 'image' && caption) && caption.startsWith(prefix)) ? caption : ''
-        const command = body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase()
+        const command = body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase().replace(/(.)(?=.*\1)/g, "")
         const args = body.slice(prefix.length).trim().split(/ +/).slice(1)
         const isCmd = body.startsWith(prefix)
         const time = moment(t * 1000).format('DD/MM HH:mm:ss')
