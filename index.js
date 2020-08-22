@@ -86,7 +86,7 @@ async function msgHandler (client, message) {
             break
         case 'menu':
         case 'help': {
-            const text = `Hi, ${pushname}! 👋️ \n\nUsable Commands!✨\n\n*Sticker Creator*\nCMD: #sticker\nDescription: Converts image into sticker, kirim gambar dengan caption #sticker atau balas gambar yang sudah dikirim dengan #sticker\n\nCMD: #sticker <url gambar>\nDescription: Converts image url into sticker\n\n*Downloader*\nCMD: #tiktok <post/video url>\nDescription: Return a Tiktok video\n\nCMD: #fb <post/video url>\nDescription: Return a Facebook video download link\n\nCMD: #ig <post/video url>\nDescription: Return a Instagram video download link\n\nCMD: #twt <post/video url>\nDescription: Return a Twitter video download link\n\n*Other*\nCMD: #tnc\nDescription: show the Terms and Conditions\n\nHope you have a great day!✨`
+            const text = `Hi, ${pushname}! 👋️ \n\nUsable Commands!✨\n\n*Sticker Creator*\nCMD: #sticker\nDescription: Converts image into sticker, kirim gambar dengan caption #sticker atau balas gambar yang sudah dikirim dengan #sticker\n\nCMD: #sticker <url gambar>\nDescription: Converts image url into sticker\n\n*Gif Sticker*\nCMD : #gif Giphy URL\nDescription: Convert gif to sticker (but giphy only)\n\n*Downloader*\nCMD: #tiktok <post/video url>\nDescription: Return a Tiktok video\n\nCMD: #fb <post/video url>\nDescription: Return a Facebook video download link\n\nCMD: #ig <post/video url>\nDescription: Return a Instagram video download link\n\nCMD: #twt <post/video url>\nDescription: Return a Twitter video download link\n\n*Other*\nCMD: #tnc\nDescription: show the Terms and Conditions\n\nHope you have a great day!✨`
             client.sendText(from, text)
             break
         }
@@ -109,6 +109,39 @@ async function msgHandler (client, message) {
                     })
             } else {
                 client.reply(from, 'Tidak ada gambar! Untuk membuka daftar perintah kirim #menu', id)
+            }
+            break
+        case 'gif':
+        case 'stikergif':
+        case 'stickergif':
+        case 'gifstiker':
+        case 'gifsticker':
+            const url = args[0]
+            const isMediaGiphy = url.match(new RegExp(/https?:\/\/media.giphy.com\/media/, 'gi'));
+            const isGiphy = url.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'));
+            if(isGiphy){
+                const getGiphyCode = url.match(new RegExp(/\-(?:.(?!\-))+$/, 'gi'));
+                if(getGiphyCode){
+                    let delHyphen = getGiphyCode[0].replace(/-/gi, "");
+                    const smallGif = "https://media.giphy.com/media/"+delHyphen+"/giphy-downsized.gif";
+                    await client.sendGiphyAsSticker(from, smallGif)
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                } else {
+                    client.reply(from, "Gagal membuat sticker gif", id)
+                }
+            } else if(isMediaGiphy){
+                const normalGif = url.match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'));
+                if(normalGif){
+                    let smallGif = url.replace(normalGif[0], "giphy-downsized.gif")
+                    await client.sendGiphyAsSticker(from, smallGif)
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                }
+            } else {
+                client.reply(from, "Saat ini sticker gif hanya bisa menggunakan link giphy saja kak.", id)
             }
             break
         case 'tiktok': {
