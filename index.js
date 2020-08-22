@@ -116,32 +116,34 @@ async function msgHandler (client, message) {
         case 'stickergif':
         case 'gifstiker':
         case 'gifsticker':
-            const url = args[0]
-            const isMediaGiphy = url.match(new RegExp(/https?:\/\/media.giphy.com\/media/, 'gi'));
-            const isGiphy = url.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'));
-            if(isGiphy){
-                const getGiphyCode = url.match(new RegExp(/\-(?:.(?!\-))+$/, 'gi'));
-                if(getGiphyCode){
-                    let delHyphen = getGiphyCode[0].replace(/-/gi, "");
-                    const smallGif = "https://media.giphy.com/media/"+delHyphen+"/giphy-downsized.gif";
-                    await client.sendGiphyAsSticker(from, smallGif)
-                    .catch((err) => {
-                        console.log(err)
-                    })
+            if (args.length == 1){
+                const url = args[0]
+                const isMediaGiphy = url.match(new RegExp(/https?:\/\/media.giphy.com\/media/, 'gi'));
+                const isGiphy = url.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'));
+                if(isGiphy){
+                    const getGiphyCode = url.match(new RegExp(/\-(?:.(?!\-))+$/, 'gi'));
+                    if(getGiphyCode){
+                        let delHyphen = getGiphyCode[0].replace(/-/gi, "");
+                        const smallGif = "https://media.giphy.com/media/"+delHyphen+"/giphy-downsized.gif";
+                        await client.sendGiphyAsSticker(from, smallGif)
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                    } else {
+                        client.reply(from, "Gagal membuat sticker gif", id)
+                    }
+                } else if(isMediaGiphy){
+                    const normalGif = url.match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'));
+                    if(normalGif){
+                        let smallGif = url.replace(normalGif[0], "giphy-downsized.gif")
+                        await client.sendGiphyAsSticker(from, smallGif)
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                    }
                 } else {
-                    client.reply(from, "Gagal membuat sticker gif", id)
+                    client.reply(from, "Saat ini sticker gif hanya bisa menggunakan link giphy saja kak.", id)
                 }
-            } else if(isMediaGiphy){
-                const normalGif = url.match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'));
-                if(normalGif){
-                    let smallGif = url.replace(normalGif[0], "giphy-downsized.gif")
-                    await client.sendGiphyAsSticker(from, smallGif)
-                    .catch((err) => {
-                        console.log(err)
-                    })
-                }
-            } else {
-                client.reply(from, "Saat ini sticker gif hanya bisa menggunakan link giphy saja kak.", id)
             }
             break
         case 'tiktok': {
