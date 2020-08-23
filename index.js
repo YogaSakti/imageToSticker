@@ -121,10 +121,10 @@ async function msgHandler (client, message) {
                 const isMediaGiphy = url.match(new RegExp(/https?:\/\/media.giphy.com\/media/, 'gi'));
                 const isGiphy = url.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'));
                 if(isGiphy){
-                    const getGiphyCode = url.match(new RegExp(/\-(?:.(?!\-))+$/, 'gi'));
+                    const getGiphyCode = url.match(new RegExp(/(\/|\-)(?:.(?!(\/|\-)))+$/, 'gi'));
                     if(getGiphyCode){
-                        let delHyphen = getGiphyCode[0].replace(/-/gi, "");
-                        const smallGif = "https://media.giphy.com/media/"+delHyphen+"/giphy-downsized.gif";
+                        let delChars = getGiphyCode[0].replace(/[-\/]/gi, "");
+                        const smallGif = "https://media.giphy.com/media/"+delChars+"/giphy-downsized.gif";
                         await client.sendGiphyAsSticker(from, smallGif)
                         .catch((err) => {
                             console.log(err)
