@@ -23,6 +23,7 @@ module.exports = {
         'no-undef': 0,
         'no-case-declarations': 0,
         'prefer-promise-reject-errors': 1,
-        'object-property-newline': 0
+        'object-property-newline': 0,
+        'no-useless-escape': 0
     }
 }
