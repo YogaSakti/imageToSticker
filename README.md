@@ -23,6 +23,8 @@
 |       ✅       | Send Photo with Caption          |
 |       ✅       | Reply A Photo                    |
 |       ✅       | Image Url                        |
+|       ✅       | Animated sticker using giphy url |
+
 
 | Downloader |                     Feature                |
 | :------------: | :---------------------------------------------: |
@@ -31,9 +33,19 @@
 |       ✅        |   Facebook Video Downloader (SD & HD)         |
 |      Error      |   Instagram Video Downloader                  |
 
+
 | Other  |                     Feature                     |
 | :------------: | :---------------------------------------------: |
 |       ✅        |   get a meme from random subreddit            |
+|      BETA        |   OCR > get text from image            |
+
+
+| Grup Only  |                     Feature                     |
+| :------------: | :---------------------------------------------: |
+|       ✅        |   Promote User                  |
+|       ✅        |   Demote User                   |
+|       ✅        |   Kick User                     |
+|       https://bit.ly/3ltMq6T        |   Mention All User      |
 
 ## To-Do
  - Fix IG Video Downloader
