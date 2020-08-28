@@ -9,7 +9,7 @@ moment.tz.setDefault('Asia/Jakarta')
 moment.locale('id')
 
 const serverOption = {
-    headless: false,
+    headless: true,
     qrRefreshS: 20,
     qrTimeout: 0,
     authTimeout: 0,
@@ -67,21 +67,18 @@ const startServer = async () => {
 
 async function msgHandler (client, message) {
     try {
-        // console.log(message)
         const { type, id, from, t, sender, isGroupMsg, chat, caption, isMedia, mimetype, quotedMsg, mentionedJidList } = message
         let { body } = message
         const { name } = chat
         let { pushname, verifiedName } = sender
         pushname = pushname || verifiedName // verifiedName is the name of someone who uses a business account
         // if (pushname === undefined) console.log(sender + '\n\n' + chat)
-
         const prefix = '#'
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption) && caption.startsWith(prefix)) ? caption : ''
         const command = body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase()
         const args = body.slice(prefix.length).trim().split(/ +/).slice(1)
         const isCmd = body.startsWith(prefix)
         const time = moment(t * 1000).format('DD/MM HH:mm:ss')
-
         if (!isCmd && !isGroupMsg) return console.log('[RECV]', color(time, 'yellow'), 'Message from', color(pushname))
         if (!isCmd && isGroupMsg) return console.log('[RECV]', color(time, 'yellow'), 'Message from', color(pushname), 'in', color(name))
         if (isCmd && !isGroupMsg) console.log(color('[EXEC]'), color(time, 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
@@ -89,10 +86,10 @@ async function msgHandler (client, message) {
 
         const botNumber = await client.getHostNumber()
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
-        const groupAdmins = await client.getGroupAdmins(groupId)
-        const groupMembers = await client.getGroupMembersId(groupId)
-        const isGroupAdmins = groupAdmins.includes(sender.id)
-        const isBotGroupAdmins = groupAdmins.includes(botNumber + '@c.us')
+        const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : ''
+        const groupMembers = isGroupMsg ? await client.getGroupMembersId(groupId) : ''
+        const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false
+        const isBotGroupAdmins = isGroupMsg ? groupAdmins.includes(botNumber + '@c.us') : false
 
         // Checking function speed
         // const timestamp = moment()
