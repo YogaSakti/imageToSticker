@@ -145,7 +145,7 @@ async function msgHandler (client, message) {
                 await client.sendGiphyAsSticker(from, smallGiftUrl).catch((err) => console.log(err))
             } else if (isMediaGiphy) {
                 const giftUrl = url.match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'))
-                if (!giftUrl) return client.reply(from, 'Gagal mengambil kode giphy', id)
+                if (!giftUrl) return client.reply(from, 'Gagal mengambil kode giphy.', id)
                 const smallGiftUrl = url.replace(giftUrl[0], 'giphy-downsized.gif')
                 await client.sendGiphyAsSticker(from, smallGiftUrl).catch((err) => console.log(err))
             } else {
