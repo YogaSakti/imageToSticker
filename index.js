@@ -53,7 +53,7 @@ const startServer = async () => {
             })
 
             client.onAddedToGroup((chat) => {
-                client.sendText(chat.groupMetadata.id, `Halo warga grup *${chat.contact.name}* terimakasih sudah menginvite bot ini, untuk melihat menu silahkan kirim *#menu*`)
+                client.sendText(chat.groupMetadata.id, `Halo warga grup *${chat.contact.name}* terimakasih sudah menginvite bot ini, untuk melihat menu silahkan kirim *$menu*`)
             })
             // listening on Incoming Call
             // client.onIncomingCall((call) => {
@@ -73,7 +73,7 @@ async function msgHandler (client, message) {
         let { pushname, verifiedName } = sender
         pushname = pushname || verifiedName // verifiedName is the name of someone who uses a business account
         // if (pushname === undefined) console.log(sender + '\n\n' + chat)
-        const prefix = '#'
+        const prefix = '$'
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption) && caption.startsWith(prefix)) ? caption : ''
         const command = body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase()
         const args = body.slice(prefix.length).trim().split(/ +/).slice(1)
@@ -128,7 +128,7 @@ async function msgHandler (client, message) {
                         if (!r && r !== undefined) client.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
                     })
             } else {
-                await client.reply(from, 'Tidak ada gambar! Untuk membuka daftar perintah kirim #menu', id)
+                await client.reply(from, 'Tidak ada gambar! Untuk membuka daftar perintah kirim $menu', id)
             }
             break
         case 'stikergif':
@@ -268,7 +268,7 @@ async function msgHandler (client, message) {
                 const text = await getText(url)
                 await client.sendText(from, text)
             } else {
-                await client.reply(from, 'Tidak ada gambar! Untuk membuka daftar perintah kirim #menu', id)
+                await client.reply(from, 'Tidak ada gambar! Untuk membuka daftar perintah kirim $menu', id)
             }
             break
         // Group Commands (group admin only)
