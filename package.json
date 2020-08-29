@@ -4,7 +4,7 @@
   "description": "Whatsapp Bot - sticker creator",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.js"
   },
   "author": "Yoga Sakti",
   "repository": {
