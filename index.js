@@ -3,7 +3,7 @@ const moment = require('moment-timezone')
 const { tiktok, instagram, twitter, facebook } = require('./lib/dl-video')
 const urlShortener = require('./lib/shortener')
 const color = require('./lib/color')
-const { fetchMeme } = require('./lib/fetcher')
+const { fetchMeme, fetchWeebs } = require('./lib/fetcher')
 const { getText } = require('./lib/ocr')
 moment.tz.setDefault('Asia/Jakarta')
 moment.locale('id')
@@ -53,7 +53,7 @@ const startServer = async () => {
             })
 
             client.onAddedToGroup((chat) => {
-                client.sendText(chat.groupMetadata.id, `Halo warga grup *${chat.contact.name}* terimakasih sudah menginvite bot ini, untuk melihat menu silahkan kirim *$menu*`)
+                client.sendText(chat.groupMetadata.id, `Halo warga grup *${chat.contact.name}* terimakasih sudah menginvite bot ini, untuk melihat menu silahkan kirim *$menu* \nPrefix = $`)
             })
             // listening on Incoming Call
             // client.onIncomingCall((call) => {
@@ -106,7 +106,7 @@ async function msgHandler (client, message) {
             break
         case 'menu':
         case 'help': {
-            const text = `Hi, ${pushname}! 👋️ \n\nUsable Commands!✨\n\n*Sticker Creator*\nCMD: #sticker\nDescription: Converts image into sticker, kirim gambar dengan caption #sticker atau balas gambar yang sudah dikirim dengan #sticker\n\nCMD: #sticker <url gambar>\nDescription: Converts image url into sticker\n\n*Gif Sticker*\nCMD : #gif Giphy URL\nDescription: Convert gif to sticker (but giphy only)\n\n*Downloader*\nCMD: #tiktok <post/video url>\nDescription: Return a Tiktok video\n\nCMD: #fb <post/video url>\nDescription: Return a Facebook video download link\n\nCMD: #ig <post/video url>\nDescription: Return a Instagram video download link\n\nCMD: #twt <post/video url>\nDescription: Return a Twitter video download link\n\n*Other*\nCMD: #tnc\nDescription: show the Terms and Conditions\n\nHope you have a great day!✨`
+            const text = `Hi, ${pushname}! 👋️ \n\nUsable Commands!✨\n\n*Sticker Creator*\nCMD: $sticker\nDescription: Converts image into sticker, kirim gambar dengan caption $sticker atau balas gambar yang sudah dikirim dengan $sticker\n\nCMD: $sticker <url gambar>\nDescription: Converts image url into sticker\n\n*Gif Sticker*\nCMD : $gif Giphy URL\nDescription: Convert gif to sticker (but giphy only)\n\n*Downloader*\nCMD: $tiktok <post/video url>\nDescription: Return a Tiktok video\n\nCMD: $fb <post/video url>\nDescription: Return a Facebook video download link\n\nCMD: $ig <post/video url>\nDescription: Return a Instagram video download link\n\nCMD: $twt <post/video url>\nDescription: Return a Twitter video download link\n\n*Other*\nCMD: $tnc\nDescription: show the Terms and Conditions\n\nHope you have a great day!✨ \n\nUnder development command: \n\nCMD: $weebs`
             await client.sendText(from, text)
             break
         }
@@ -252,6 +252,11 @@ async function msgHandler (client, message) {
             await client.sendFileFromUrl(from, `${url}`, 'meme.jpg', `${title}`)
             break
         }
+
+        case 'weebs':
+            const { title, url } = await fetchWeebs()
+            await client.sendFileFromUrl(from, `${url}`, 'weebs.jpg', `${title}`)
+            break
         case 'ocr':
             if (isMedia) {
                 const mediaData = await decryptMedia(message, uaOverride)
@@ -273,46 +278,52 @@ async function msgHandler (client, message) {
             break
         // Group Commands (group admin only)
         case 'kick':
-            if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-            if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-            if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
-            if (mentionedJidList.length === 0) return client.reply(from, 'Maaf, format pesan salah silahkan periksa menu.', id)
-            await client.sendText(from, `Request diterima, mengeluarkan:\n${mentionedJidList.join('\n')}`)
-            for (let i = 0; i < mentionedJidList.length; i++) {
-                if (groupAdmins.includes(mentionedJidList[i])) return await client.sendText('Gagal, kamu tidak bisa mengeluarkan admin grup.')
-                await client.removeParticipant(groupId, mentionedJidList[i])
-            }
+            // if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            // if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+            // if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+            // if (mentionedJidList.length === 0) return client.reply(from, 'Maaf, format pesan salah silahkan periksa menu.', id)
+            // await client.sendText(from, `Request diterima, mengeluarkan:\n${mentionedJidList.join('\n')}`)
+            // for (let i = 0; i < mentionedJidList.length; i++) {
+            //     if (groupAdmins.includes(mentionedJidList[i])) return await client.sendText('Gagal, kamu tidak bisa mengeluarkan admin grup.')
+            //     await client.removeParticipant(groupId, mentionedJidList[i])
+            // }
+            await client.sendText(from, 'Tidak dapat menggunakan command tersebut selama bot dalam mode pengembangan.', id)
             break
         case 'promote': {
-            if (!isGroupMsg) return await client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-            if (!isGroupAdmins) return await client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-            if (!isBotGroupAdmins) return await client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
-            if (mentionedJidList.length === 0) return await client.reply(from, 'Maaf, format pesan salah silahkan periksa menu.', id)
-            if (mentionedJidList.length >= 2) return await client.reply(from, 'Maaf, perintah ini hanya dapat digunakan kepada 1 user.', id)
-            if (groupAdmins.includes(mentionedJidList[0])) return await client.reply(from, 'Maaf, user tersebut sudah menjadi admin.', id)
-            await client.promoteParticipant(groupId, mentionedJidList[0])
-            await client.sendTextWithMentions(from, `Request diterima, menambahkan @${mentionedJidList[0].replace('@c.us', '')} sebagai admin.`)
+            // if (!isGroupMsg) return await client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            // if (!isGroupAdmins) return await client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+            // if (!isBotGroupAdmins) return await client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+            // if (mentionedJidList.length === 0) return await client.reply(from, 'Maaf, format pesan salah silahkan periksa menu.', id)
+            // if (mentionedJidList.length >= 2) return await client.reply(from, 'Maaf, perintah ini hanya dapat digunakan kepada 1 user.', id)
+            // if (groupAdmins.includes(mentionedJidList[0])) return await client.reply(from, 'Maaf, user tersebut sudah menjadi admin.', id)
+            // await client.promoteParticipant(groupId, mentionedJidList[0])
+            // await client.sendTextWithMentions(from, `Request diterima, menambahkan @${mentionedJidList[0].replace('@c.us', '')} sebagai admin.`)
+            await client.sendText(from, 'Tidak dapat menggunakan command tersebut selama bot dalam mode pengembangan.', id)
             break
         }
         case 'demote': {
-            if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-            if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-            if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
-            if (mentionedJidList.length === 0) return client.reply(from, 'Maaf, format pesan salah silahkan periksa menu.', id)
-            if (mentionedJidList.length >= 2) return await client.reply(from, 'Maaf, perintah ini hanya dapat digunakan kepada 1 user.', id)
-            if (!groupAdmins.includes(mentionedJidList[0])) return await client.reply(from, 'Maaf, user tersebut tidak menjadi admin.', id)
-            await client.demoteParticipant(groupId, mentionedJidList[0])
-            await client.sendTextWithMentions(from, `Request diterima, menghapus jabatan @${mentionedJidList[0].replace('@c.us', '')}.`)
+            // if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            // if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+            // if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+            // if (mentionedJidList.length === 0) return client.reply(from, 'Maaf, format pesan salah silahkan periksa menu.', id)
+            // if (mentionedJidList.length >= 2) return await client.reply(from, 'Maaf, perintah ini hanya dapat digunakan kepada 1 user.', id)
+            // if (!groupAdmins.includes(mentionedJidList[0])) return await client.reply(from, 'Maaf, user tersebut tidak menjadi admin.', id)
+            // await client.demoteParticipant(groupId, mentionedJidList[0])
+            // await client.sendTextWithMentions(from, `Request diterima, menghapus jabatan @${mentionedJidList[0].replace('@c.us', '')}.`)
+            await client.sendText(from, 'Tidak dapat menggunakan command tersebut selama bot dalam mode pengembangan.', id)
             break
         }
 
         case 'bye':
-            if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-            if (!isGroupAdmins) return client.reply(from, 'Maaf, perintah ini hanya dapat dilakukan oleh admin grup!', id)
-            await client.sendText(from, 'Good bye... ( ⇀‸↼‶ )').then(() => client.leaveGroup(groupId))
+            // if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            // if (!isGroupAdmins) return client.reply(from, 'Maaf, perintah ini hanya dapat dilakukan oleh admin grup!', id)
+            // await client.sendText(from, 'Good bye... ( ⇀‸↼‶ )').then(() => client.leaveGroup(groupId))
+            await client.sendText(from, 'Tidak dapat menggunakan command tersebut selama bot dalam mode pengembangan.', id)
             break
+    
         default:
             console.log(color('[ERROR]', 'red'), color(time, 'yellow'), 'Unregistered Command from', color(pushname))
+            await client.sendText(from, `Maaf, tidak dapat mengenal command. silahkan ketik *$menu* untuk bantuan. \nprefix = $`)
             break
         }
     } catch (err) {
