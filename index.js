@@ -323,7 +323,7 @@ async function msgHandler (client, message) {
     
         default:
             console.log(color('[ERROR]', 'red'), color(time, 'yellow'), 'Unregistered Command from', color(pushname))
-            await client.sendText(from, `Maaf, tidak dapat mengenal command. silahkan ketik *$menu* untuk bantuan. \nprefix = $`)
+            await client.sendText(from, `Maaf, tidak dapat mengenal command. Silahkan ketik *$menu* untuk bantuan. \nprefix = $`)
             break
         }
     } catch (err) {
