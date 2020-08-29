@@ -149,7 +149,7 @@ async function msgHandler (client, message) {
                 const smallGiftUrl = url.replace(giftUrl[0], 'giphy-downsized.gif')
                 await client.sendGiphyAsSticker(from, smallGiftUrl).catch((err) => console.log(err))
             } else {
-                await client.reply(from, 'maaf, untuk saat ini sticker gif hanya bisa menggunakan link dari giphy.', id)
+                await client.reply(from, 'Maaf, untuk saat ini sticker gif hanya bisa menggunakan link dari giphy.', id)
             }
             break
         // Video Downloader
