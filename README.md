@@ -58,7 +58,7 @@
 This project require NodeJS v12.
 
 ### Install
-Clone this project
+Clone this projects
 
 ```bash
 > git clone https://github.com/YogaSakti/imageToSticker.git
