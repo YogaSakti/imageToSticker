@@ -55,6 +55,10 @@ const startServer = async () => {
             client.onAddedToGroup((chat) => {
                 client.sendText(chat.groupMetadata.id, `Halo warga grup *${chat.contact.name}* terimakasih sudah menginvite bot ini, untuk melihat menu silahkan kirim *#menu*`)
             })
+            client.onGlobalParicipantsChanged((participantChangedEventModel) => {
+                if (participantChangedEventModel.action === 'add') client.sendText(participantChangedEventModel.chat, `Halo selamat datang, untuk melihat commands silahkan kirim *#menu*`)
+                if (participantChangedEventModel.action === 'remove') client.sendText(participantChangedEventModel.chat, 'yah left, pasti baperan')
+            })
             // listening on Incoming Call
             // client.onIncomingCall((call) => {
             //     client.sendText(call.peerJid._serialized, 'Maaf, saya tidak bisa menerima panggilan.')
@@ -113,8 +117,8 @@ async function msgHandler (client, message) {
         // Sticker Creator
         case 'sticker':
         case 'stiker':
-            if (isMedia) {
-                const mediaData = await decryptMedia(message, uaOverride)
+            if (isMedia && type === 'image') {
+                const mediaData = await decryptMedia(message,uaOverride)
                 const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                 await client.sendImageAsSticker(from, imageBase64)
             } else if (quotedMsg && quotedMsg.type === 'image') {
