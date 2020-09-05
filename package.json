@@ -17,7 +17,7 @@
   "homepage": "https://github.com/YogaSakti/imageToSticker",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^2.0.6",
+    "@open-wa/wa-automate": "^2.0.13",
     "moment-timezone": "^0.5.31",
     "node-fetch": "^2.6.0",
     "tesseract.js": "^2.1.1",
