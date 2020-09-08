@@ -1,7 +1,7 @@
 <div align="center">
  
 # Whatsapp Bot - sticker creator
-[![CodeFactor](https://www.codefactor.io/repository/github/yogasakti/imagetosticker/badge)](https://www.codefactor.io/repository/github/yogasakti/imagetosticker)
+[[![Run on Repl.it](https://repl.it/badge/github/YogaSakti/imageToSticker)](https://repl.it/github/YogaSakti/imageToSticker)](https://www.codefactor.io/repository/github/yogasakti/imagetosticker/badge)](https://www.codefactor.io/repository/github/yogasakti/imagetosticker)
 <details>
  <summary>🥟 Buy me a Dimsum!</summary>
 
