@@ -1,10 +1,9 @@
 /**
  * Get Client Options
  * @param  {Boolean} headless
- * @param  {Array} chromeArgs
  */
 
-module.exports = options = (headls, chromeArgs) => {
+module.exports = options = (headless) => {
     let execPath
 
     if (process.platform === 'win32' || process.platform === 'win64') {
@@ -16,7 +15,7 @@ module.exports = options = (headls, chromeArgs) => {
     }
 
     const options = {
-        headless: headls,
+        headless: headless,
         executablePath: execPath,
         qrRefreshS: 10,
         qrTimeout: 0,
@@ -32,7 +31,6 @@ module.exports = options = (headls, chromeArgs) => {
             '--disable-application-cache',
             '--disable-offline-load-stale-cache',
             '--disk-cache-size=0',
-            ...chromeArgs
         ]
     }
 
