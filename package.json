@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
-    
   },
   "author": "Yoga Sakti",
   "repository": {
