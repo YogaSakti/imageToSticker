@@ -24,6 +24,7 @@
 |       ✅       | Reply A Photo                    |
 |       ✅       | Image Url                        |
 |       ✅       | Animated sticker using giphy url |
+|       https://bit.ly/3jYrV0P       | sticker with no background       |
 
 
 | Downloader |                     Feature                |
@@ -31,13 +32,14 @@
 |       ✅        |   Tiktok Downloader (No WM & WM)              |
 |       ✅        |   Twitter Video Downloader                    |
 |       ✅        |   Facebook Video Downloader (SD & HD)         |
-|      Error      |   Instagram Video Downloader                  |
+|       ✅      |   Instagram Video Downloader                  |
 
 
 | Other  |                     Feature                     |
 | :------------: | :---------------------------------------------: |
 |       ✅        |   get a meme from random subreddit            |
-|      BETA        |   OCR > get text from image            |
+|       ✅        |   Check Shipping info (indonesia only)         |
+|      BETA        |   Anti Spam                                    |
 
 
 | Grup Only  |                     Feature                     |
@@ -45,10 +47,11 @@
 |       ✅        |   Promote User                  |
 |       ✅        |   Demote User                   |
 |       ✅        |   Kick User                     |
-|       https://bit.ly/3ltMq6T        |   Mention All User      |
+|       ✅        |   Delete bot message            |
+|       https://bit.ly/3jYrV0P        |   Mention All User      |
 
 ## To-Do
- - Fix IG Video Downloader
+ - More Feature
  - More Refactoring
  
 ---
