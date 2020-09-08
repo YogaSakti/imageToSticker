@@ -6,12 +6,12 @@ const msgHandler = require('./handler/message')
 const startServer = () => {
     create('Imperial', clientOptions(true))
         .then((client) => {
-            console.log('[Dev]', color('Red Emperor', 'yellow'))
-            console.log('[SERVER] Server Started!')
+            console.log('[DEV]', color('Red Emperor', 'yellow'))
+            console.log('[CLIENT] CLIENT Started!')
 
             // Force it to keep the current session
             client.onStateChanged((state) => {
-                console.log('[State]', state)
+                console.log('[Client State]', state)
                 if (state === 'CONFLICT') client.forceRefocus()
             })
 
@@ -20,7 +20,7 @@ const startServer = () => {
                 client.getAmountOfLoadedMessages() // Cut message Cache if cache more than 3K
                     .then((msg) => {
                         if (msg >= 3000) {
-                            console.log('[SYS]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
+                            console.log('[CLIENT]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
                             client.cutMsgCache()
                         }
                     })
@@ -29,14 +29,13 @@ const startServer = () => {
             })
 
             // listen group invitation
-            client.onAddedToGroup(({ id, groupMetadata: { gid }, contact: { name } }) =>
-                client.getGroupMembersId(gid)
+            client.onAddedToGroup(({ groupMetadata: { id }, contact: { name } }) =>
+                client.getGroupMembersId(id)
                     .then((ids) => {
-                    // conditions if the group members are less than 10 then the bot will leave the group
+                        console.log('[CLIENT]', color(`Invited to Group... [ : ${ids.length}]`, 'yellow'))
+                        // conditions if the group members are less than 10 then the bot will leave the group
                         if (ids.length <= 10) {
-                            client.sendText(gid, 'Sorry, the minimum group member is 10 user to use this bot. Bye~')
-                            client.leaveGroup(gid)
-                            client.deleteChat(id)
+                            client.sendText(id, 'Sorry, the minimum group member is 10 user to use this bot. Bye~').then(() => client.leaveGroup(id))
                         } else {
                             client.sendText(id, `Hello group members *${name}*, thank you for inviting this bot, to see the bot menu send *#menu*`)
                         }
