@@ -133,11 +133,11 @@ module.exports = msgHandler = async (client, message) => {
             if (!url.match(isUrl) && !url.includes('tiktok.com')) return client.reply(from, 'Maaf, link yang kamu kirim tidak valid. [Invalid Link]', id)
             await client.reply(from, '_Scraping Metadata..._ \n\nTerimakasih telah menggunakan bot ini, kamu dapat membantu pengembangan bot ini dengan menyawer melalui https://saweria.co/donate/yogasakti atau mentrakteer melalui https://trakteer.id/red-emperor \nTerimakasih.', id)
             downloader.tiktok(url)
-                .then((videoMeta) => {
+                .then(async (videoMeta) => {
                     const filename = videoMeta.authorMeta.name + '.mp4'
                     const caps = `*Metadata:*\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'}\n\nProcessed for ${processTime(moment())} _Second_`
-                    client.sendFileFromUrl(from, videoMeta.url, filename, videoMeta.NoWaterMark ? caps : `⚠ Video tanpa watermark tidak tersedia. \n\n${caps}`, '', { headers: { 'User-Agent': 'okhttp/4.5.0' } })
-                        .catch(err => console.log('Caught exception: ', err))
+                    await client.sendFileFromUrl(from, videoMeta.url, filename, videoMeta.NoWaterMark ? caps : `⚠ Video tanpa watermark tidak tersedia. \n\n${caps}`, '', { headers: { 'User-Agent': 'okhttp/4.5.0' } }, true)
+                        .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized}`)).catch((err) => console.error(err))
                 }).catch(() => {
                     client.reply(from, 'Gagal mengambil metadata, link yang kamu kirim tidak valid. [Invalid Link]', id)
                 })
@@ -150,12 +150,14 @@ module.exports = msgHandler = async (client, message) => {
             downloader.insta(url)
                 .then(async (data) => {
                     if (data.type == 'GraphSidecar') {
-                        if (data.image.length != 0) data.image.map((x) => client.sendFileFromUrl(from, x, 'photo.jpg', `[ Processed for ${processTime(moment())} _Second_ ]`))
-                        if (data.video.length != 0) data.video.map((x) => client.sendFileFromUrl(from, x.videoUrl, 'video.jpg', `[ Processed for ${processTime(moment())} _Second_ ]`))
+                        if (data.image.length != 0) data.image.map((x) => client.sendFileFromUrl(from, x, 'photo.jpg', `[ Processed for ${processTime(moment())} _Second_ ]`, null, null, true)).then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized}`)).catch((err) => console.error(err))
+                        if (data.video.length != 0) data.video.map((x) => client.sendFileFromUrl(from, x.videoUrl, 'video.jpg', `[ Processed for ${processTime(moment())} _Second_ ]`, null, null, true)).then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized}`)).catch((err) => console.error(err))
                     } else if (data.type == 'GraphImage') {
-                        await client.sendFileFromUrl(from, data.image, 'photo.jpg', `[ Processed for ${processTime(moment())} _Second_ ]`)
+                        await client.sendFileFromUrl(from, data.image, 'photo.jpg', `[ Processed for ${processTime(moment())} _Second_ ]`, null, null, true)
+                            .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized}`)).catch((err) => console.error(err))
                     } else if (data.type == 'GraphVideo') {
-                        await client.sendFileFromUrl(from, data.video.videoUrl, 'video.mp4', `[ Processed for ${processTime(moment())} _Second_ ]`)
+                        await client.sendFileFromUrl(from, data.video.videoUrl, 'video.mp4', `[ Processed for ${processTime(moment())} _Second_ ]`, null, null, true)
+                            .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized}`)).catch((err) => console.error(err))
                     }
                 })
                 .catch((err) => {
@@ -174,10 +176,12 @@ module.exports = msgHandler = async (client, message) => {
                         const content = data.variants.filter(x => x.content_type !== 'application/x-mpegURL').sort((a, b) => b.bitrate - a.bitrate)
                         const result = await urlShortener(content[0].url)
                         console.log('Shortlink: ' + result)
-                        await client.sendFileFromUrl(from, content[0].url, 'video.mp4', `Link Download: ${result} \n\nProcessed for ${processTime(moment())} _Second_`)
+                        await client.sendFileFromUrl(from, content[0].url, 'video.mp4', `Link Download: ${result} \n\nProcessed for ${processTime(moment())} _Second_`, null, null, true)
+                            .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized}`)).catch((err) => console.error(err))
                     } else if (data.type === 'photo') {
                         for (let i = 0; i < data.variants.length; i++) {
-                            await client.sendFileFromUrl(from, data.variants[i], data.variants[i].split('/media/')[1], '')
+                            await client.sendFileFromUrl(from, data.variants[i], data.variants[i].split('/media/')[1], '', null, null, true)
+                                .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized}`)).catch((err) => console.error(err))
                         }
                     }
                 })
@@ -202,7 +206,8 @@ module.exports = msgHandler = async (client, message) => {
                     }
                     const link = shorts.map((x) => `${x.resolution} Quality: ${x.short}`)
                     const caption = `Text: ${title} \n\nLink Download: \n${link.join('\n')} \n\nProcessed for ${processTime(moment())} _Second_`
-                    await client.sendFileFromUrl(from, thumbnail, 'videos.jpg', caption)
+                    await client.sendFileFromUrl(from, thumbnail, 'videos.jpg', caption, null, null, true)
+                        .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized}`)).catch((err) => console.error(err))
                 })
                 .catch((err) => client.reply(from, `Error, url tidak valid atau tidak memuat video. [Invalid Link or No Video] \n\n${err}`, id))
             break
@@ -210,7 +215,7 @@ module.exports = msgHandler = async (client, message) => {
         case 'mim':
         case 'memes':
         case 'meme':
-            meme().then(({ title, url }) => client.sendFileFromUrl(from, `${url}`, 'meme.jpg', `${title}`))
+            meme().then(({ title, url }) => client.sendFileFromUrl(from, `${url}`, 'meme.jpg', `${title}`, null, null, true))
             break
         case 'resi':
             if (args.length !== 2) return client.reply(from, 'Maaf, format pesan salah silahkan periksa menu. [Wrong Format]', id)

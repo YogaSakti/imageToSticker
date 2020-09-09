@@ -4,3 +4,6 @@ debug.log
 *.data.json
 premium.js
 quotemsg.js
+lib/quran.js
+util/flat.json
+util/getScreenshot.js
