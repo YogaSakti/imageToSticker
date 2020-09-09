@@ -24,7 +24,7 @@
 |       ✅       | Reply A Photo                    |
 |       ✅       | Image Url                        |
 |       ✅       | Animated sticker using giphy url |
-|       https://bit.ly/3jYrV0P       | sticker with no background       |
+|       https://bit.ly/3hmgD4R       | sticker with no background       |
 
 
 | Downloader |                     Feature                |
@@ -48,11 +48,11 @@
 |       ✅        |   Demote User                   |
 |       ✅        |   Kick User                     |
 |       ✅        |   Delete bot message            |
-|       https://bit.ly/3jYrV0P        |   Mention All User      |
+|       https://bit.ly/3hmgD4R        |   Mention All User      |
 
 ## To-Do
- - More Feature
- - More Refactoring
+ - Add More Feature
+ - More refactoring
  
 ---
 

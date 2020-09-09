@@ -32,7 +32,7 @@ const startServer = () => {
             client.onAddedToGroup(({ groupMetadata: { id }, contact: { name } }) =>
                 client.getGroupMembersId(id)
                     .then((ids) => {
-                        console.log('[CLIENT]', color(`Invited to Group... [ : ${ids.length}]`, 'yellow'))
+                        console.log('[CLIENT]', color(`Invited to Group. [ ${name} : ${ids.length}]`, 'yellow'))
                         // conditions if the group members are less than 10 then the bot will leave the group
                         if (ids.length <= 10) {
                             client.sendText(id, 'Sorry, the minimum group member is 10 user to use this bot. Bye~').then(() => client.leaveGroup(id))
