@@ -5,11 +5,10 @@
 
 module.exports = options = (headless) => {
     let execPath
-
     if (process.platform === 'win32' || process.platform === 'win64') {
         execPath = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
     } else if (process.platform === 'linux') {
-        execPath = '/usr/bin/google-chrome-stable' 
+        execPath = '/usr/bin/google-chrome-stable'
         // execPath = '/usr/bin/chromium-browser'
     } else if (process.platform === 'darwin') {
         execPath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
