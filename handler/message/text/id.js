@@ -39,7 +39,7 @@ Untuk merubah gambar dari url menjadi sticker.
 Untuk merubah gif menjadi sticker (Giphy Only)
 
 Downloader:
-1. *#tiktok* _<tiktol url> _
+1. *#tiktok* _<tiktok url> _
 Untuk mengunduh video dari video tiktok.
 
 2. *#fb* _<post/video url>_
