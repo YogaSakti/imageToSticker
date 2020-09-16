@@ -7,3 +7,10 @@ quotemsg.js
 lib/quran.js
 util/flat.json
 util/getScreenshot.js
+utils/canvas.js
+utils/flat.json
+utils/getScreenshot.js
+.node-persist
+*.code-workspace
+lib/instaStory.js
+lib/jiwa.js
