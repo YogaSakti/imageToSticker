@@ -58,7 +58,7 @@ Penggunaan: kirim pesan dengan format *#twt https://twitter.com/ntsana_/status/1
 Lain-lain:
 1. *#translate* _<kode bahasa>_
 Untuk mengartikan pesan menjadi bahasa yang ditentukan.
-Penggunaan: Balas/quote/reply pesan yang ingin kamu translate dengan _*#translate id*_ <- id adalah kode bahasa. kode bahasa dapat dilihat di _https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes_
+Penggunaan: Balas/quote/reply pesan yang ingin kamu translate dengan _*#translate id*_ <- id adalah kode bahasa. kode bahasa dapat dilihat di *https://bit.ly/33FVldE*
 
 2. *#resi* _<kurir>_ _<nomer resi>_
 Untuk memeriksa status pengiriman barang, daftar kurir: jne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex.
