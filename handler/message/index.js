@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { decryptMedia } = require('@open-wa/wa-automate')
+const { decryptMedia, Client } = require('@open-wa/wa-automate')
 const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 const { downloader, cekResi, removebg, urlShortener, meme, translate, getLocationData } = require('../../lib')
@@ -8,7 +8,7 @@ const { uploadImages } = require('../../utils/fetcher')
 
 const { menuId, menuEn } = require('./text') // Indonesian & English menu
 
-module.exports = msgHandler = async (client, message) => {
+module.exports = msgHandler = async (client = new Client(), message) => {
     try {
         const { type, id, from, t, sender, isGroupMsg, chat, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
