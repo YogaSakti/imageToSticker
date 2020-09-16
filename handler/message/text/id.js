@@ -66,7 +66,7 @@ Penggunaan: kirim pesan dengan format _*#resi jne 1238757632*_
 
 3. *#meme* _<teks atas>_ | _<teks bawah>_
 Untuk membuat meme dengan teks atas dan bawah
-Penggunaan: kirim gambar dengan caption _*#meme aku atas | kamu bawah*_, atau juga bisa dengan membalas gambar yang sudah ada.\
+Penggunaan: kirim gambar dengan caption _*#meme aku atas | kamu bawah*_, atau juga bisa dengan membalas gambar yang sudah ada.
 
 4. *#ceklokasi*
 Cek lokasi penyebaran covid-19 di daerah sekitarmu (kelurahan).
