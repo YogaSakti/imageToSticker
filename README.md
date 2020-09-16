@@ -25,6 +25,7 @@
 |       ✅       | Image Url                        |
 |       ✅       | Animated sticker using giphy url |
 |       https://bit.ly/3hmgD4R       | sticker with no background       |
+|       ........       | custom meme sticker       |
 
 
 | Downloader |                     Feature                |
@@ -37,9 +38,11 @@
 
 | Other  |                     Feature                     |
 | :------------: | :---------------------------------------------: |
-|       ✅        |   get a meme from random subreddit            |
+|       ✅        |   Create Custom meme (top text & bottom text)  |
+|       ✅        |   Translate text (quote only)                  |
+|       ✅        |   check data on the spread of Covid-19 in certain locations|
 |       ✅        |   Check Shipping info (indonesia only)         |
-|      BETA        |   Anti Spam                                    |
+|      BETA        |   Anti Spam                                   |
 
 
 | Grup Only  |                     Feature                     |
