@@ -14,3 +14,5 @@ utils/getScreenshot.js
 *.code-workspace
 lib/instaStory.js
 lib/jiwa.js
+
+package-lock.json
