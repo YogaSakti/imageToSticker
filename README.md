@@ -9,7 +9,7 @@
  
  [Trakteer](https://trakteer.id/red-emperor)
  
- [Paypal.me](paypal.me/yshputra)
+ [Paypal.me](https://paypal.me/yshputra)
  
 </details>
 </div>
