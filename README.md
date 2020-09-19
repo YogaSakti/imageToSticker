@@ -25,7 +25,7 @@
 |       ✅       | Image Url                        |
 |       ✅       | Animated sticker using giphy url |
 |       https://bit.ly/3hmgD4R       | sticker with no background       |
-|       ........       | custom meme sticker       |
+|       https://bit.ly/3hmgD4R       | sticker meme      |
 
 
 | Downloader |                     Feature                |
