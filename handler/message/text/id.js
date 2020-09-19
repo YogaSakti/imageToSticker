@@ -38,8 +38,12 @@ Penggunaan:
 Untuk merubah gif menjadi sticker (Giphy Only)
 Penggunaan: Kirim pesan dengan format *gifsticker https://media.giphy.com/media/JUvI2c1ddyzkwK4RlV/giphy.gif*
 
+4. *#memesticker* _<teks atas>_ | _<teks bawah>_
+Untuk membuat sticker meme dengan teks atas dan bawah
+Penggunaan: kirim gambar dengan caption _*#meme aku atas | kamu bawah*_, atau juga bisa dengan membalas gambar yang sudah ada.
+
 Downloader:
-1. *#tiktok* _<tiktok url> _
+1. *#tiktok* _<tiktok url>_
 Untuk mengunduh video dari video tiktok.
 Penggunaan: kirim pesan dengan format *#tiktok https://www.tiktok.com/@itsandani/video/6869248690381425922* 
 
