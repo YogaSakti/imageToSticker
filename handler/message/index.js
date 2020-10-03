@@ -263,6 +263,11 @@ module.exports = msgHandler = async (client = new Client(), message) => {
             const text = `*CEK LOKASI PENYEBARAN COVID-19*\nHasil pemeriksaan dari lokasi yang anda kirim adalah *${zoneStatus.status}* ${zoneStatus.optional}\n\nInformasi lokasi terdampak disekitar anda:\n${data}`
             client.sendText(from, text)
             break
+        case 'cekadmin':
+            let checkOwner = chat.groupMetadata.owner
+            checkOwner = checkOwner.replace('@c.us', '')
+            await client.sendTextWithMentions(from, `Request diterima, admin di grup ini adalah @${checkOwner}.`)
+            break
         // Group Commands (group admin only)
         case 'kick':
             if (!isGroupMsg) return client.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup! [Group Only]', id)
