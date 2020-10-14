@@ -1,7 +1,10 @@
 const { create, Client } = require('@open-wa/wa-automate')
 const { color } = require('./utils')
 const options = require('./utils/options')
-const msgHandler = require('./handler/message')
+const fs = require('fs')
+// Cache handler and check for file change
+require('./handler/message')
+nocache('./handler/message', module => console.log(`'${module}' Updated!`))
 
 const start = (client = new Client()) => {
     console.log('[DEV]', color('Red Emperor', 'yellow'))
@@ -22,8 +25,8 @@ const start = (client = new Client()) => {
                     client.cutMsgCache()
                 }
             })
-        // Message Handler
-        msgHandler(client, message)
+        // Message Handler (Loaded from recent cache)
+        require('./handler/message')(client, message)
     })
 
     // listen group invitation
@@ -50,6 +53,34 @@ const start = (client = new Client()) => {
 
     client.onIncomingCall((callData) => {
         // client.contactBlock(callData.peerJid)
+    })
+}
+
+/**
+ * Uncache if there is file change
+ * @param {string} module Module name or path
+ * @param {function} cb <optional> 
+ */
+function nocache(module, cb = () => { }) {
+    console.log('Module', `'${module}'`, 'is now being watched for changes')
+    fs.watchFile(require.resolve(module), async () => {
+        await uncache(require.resolve(module))
+        cb(module)
+    })
+}
+
+/**
+ * Uncache a module
+ * @param {string} module Module name or path
+ */
+function uncache(module = '.') {
+    return new Promise((resolve, reject) => {
+        try {
+            delete require.cache[require.resolve(module)]
+            resolve()
+        } catch (e) {
+            reject(e)
+        }
     })
 }
 
