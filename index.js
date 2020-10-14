@@ -1,8 +1,8 @@
 const { create, Client } = require('@open-wa/wa-automate')
 const { color } = require('./utils')
 const options = require('./utils/options')
-const fs = require('fs')
-// Cache handler and check for file change
+
+// cache handler and check for file change
 require('./handler/message')
 nocache('./handler/message', module => console.log(`'${module}' Updated!`))
 
@@ -57,21 +57,21 @@ const start = (client = new Client()) => {
 }
 
 /**
- * Uncache if there is file change
- * @param {string} module Module name or path
- * @param {function} cb <optional> 
+ * uncache if there is file change
+ * @param {string} module module name or path
+ * @param {function} cb when module updated <optional> 
  */
 function nocache(module, cb = () => { }) {
     console.log('Module', `'${module}'`, 'is now being watched for changes')
-    fs.watchFile(require.resolve(module), async () => {
+    require('fs').watchFile(require.resolve(module), async () => {
         await uncache(require.resolve(module))
         cb(module)
     })
 }
 
 /**
- * Uncache a module
- * @param {string} module Module name or path
+ * uncache a module
+ * @param {string} module module name or path
  */
 function uncache(module = '.') {
     return new Promise((resolve, reject) => {
