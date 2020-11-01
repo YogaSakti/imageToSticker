@@ -1,19 +1,33 @@
+# Dempedency directory
 node_modules
 .node-persist
 .idea
-*.code-workspace
-debug.log
-package-lock.json
+
+# Dot files
+.idea
+.node-persist
+
+# Log files
+*.log
+
+# Session files
 *.data.json
 
+# Workspace files
+*.code-workspace
+
+# Lock files
+package-lock.json
+
+# Other files
 premium.js
 quotemsg.js
-
 utils/getScreenshot.js
 utils/*.json
-
 lib/instaStory.js
 lib/jiwa.js
 lib/quran.js
 lib/giphy.js
 lib/*.json
+lib/instaStory.js
+lib/jiwa.js
