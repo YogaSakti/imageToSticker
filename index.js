@@ -53,6 +53,9 @@ const start = (client = new Client()) => {
     })
 }
 
-create('Imperial', options(true, start))
-    .then((client) => start(client))
-    .catch((err) => new Error(err))
+create({
+	sessionId: 'Imperial',
+	...options(true, start)
+})
+.then((client) => start(client))
+.catch((err) => new Error(err))
