@@ -1,7 +1,8 @@
-# Dempedency directory
+# Directory
 node_modules
 .node-persist
 .idea
+db
 
 # Dot files
 .idea
@@ -18,12 +19,13 @@ node_modules
 
 # Lock files
 package-lock.json
+*.lock
 
 # Other files
 premium.js
 quotemsg.js
 utils/getScreenshot.js
-utils/*.json
+utils/flat.json
 lib/instaStory.js
 lib/jiwa.js
 lib/quran.js
@@ -31,3 +33,4 @@ lib/giphy.js
 lib/*.json
 lib/instaStory.js
 lib/jiwa.js
+utils/anu.js

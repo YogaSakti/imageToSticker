@@ -1,12 +1,6 @@
 const sharp = require('sharp')
 const { fromBuffer } = require('file-type')
 
-/**
- * Resize image to buffer or base64
- * @param  {Buffer} bufferdata
- * @param  {Boolean} encode
- * @param  {String} mimType
- */
 // eslint-disable-next-line no-async-promise-executor
 module.exports = resizeImage = (buff, encode) => new Promise(async (resolve, reject) => {
     console.log('Resizeing image...')
