@@ -9,7 +9,7 @@ const { uploadImages } = require('../../utils/fetcher')
 
 const { menuId, menuEn } = require('./text') // Indonesian & English menu
 
-module.exports = msgHandler = async (client = new Client(), message) => {
+module.exports = msgHandler = async (client, message) => {
     try {
         const { type, id, from, t, sender, isGroupMsg, chat, caption, isMedia, isGif, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
