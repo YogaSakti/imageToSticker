@@ -1,5 +1,7 @@
 <div align="center">
  
+# THIS REPOSITORY IS OUTDATED AND NOT MAINTAINED AGAIN, ALL THE ISSUES OR PULL REQUESTS WILL BE IGNORED.
+ 
 # Whatsapp Bot - sticker creator
 [![Codefactor](https://www.codefactor.io/repository/github/yogasakti/imagetosticker/badge)](https://www.codefactor.io/repository/github/yogasakti/imagetosticker)
 <details>
