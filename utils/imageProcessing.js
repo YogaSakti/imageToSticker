@@ -2,8 +2,9 @@ const sharp = require('sharp')
 const { fromBuffer } = require('file-type')
 
 // eslint-disable-next-line no-async-promise-executor
+// ganti bahasa indonesia
 module.exports = resizeImage = (buff, encode) => new Promise(async (resolve, reject) => {
-    console.log('Resizeing image...')
+    console.log('Mengubah ukuran gambar..')
     const { mime } = await fromBuffer(buff)
     sharp(buff, { failOnError: false })
         .resize(512, 512)
