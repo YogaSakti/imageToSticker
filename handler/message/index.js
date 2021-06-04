@@ -68,6 +68,13 @@ module.exports = msgHandler = async (client, message) => {
         case 'donasi':
             await client.sendText(from, menuId.textDonasi())
             break
+        // Shortlink
+        case 'shortlink':
+            if (args.length !== 1) return client.reply(from, 'Maaf, format pesan salah silahkan periksa menu. [Wrong Format]', id)
+            if (!isUrl(args[0])) return client.reply(from, 'Maaf, url yang kamu kirim tidak valid. [Invalid Link]', id)
+            const shortlink = await urlShortener(args[0]);
+            await client.sendText(from, shortlink);
+            break
         // Sticker Creator
         case 'sticker':
         case 'stiker': {
