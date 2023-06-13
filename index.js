@@ -1,6 +1,6 @@
-const { create, Client } = require('@open-wa/wa-automate')
-const { color, messageLog } = require('./utils')
-const msgHandler = require('./handler/message')
+const { create, Client } = require('@open-wa/wa-automate');
+const { color, messageLog } = require('./utils');
+const msgHandler = require('./handler/message');
 
 const start = (client = new Client()) => {
     console.log('[DEV]', color('Red Emperor', 'yellow'))
