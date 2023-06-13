@@ -3,11 +3,11 @@ const { color, messageLog } = require('./utils')
 const msgHandler = require('./handler/message')
 
 const start = (client = new Client()) => {
-    console.log('[DEV]', color('Red Emperor', 'yellow'))
-    console.log('[CLIENT] CLIENT Started!')
+    console.log('[DEV]', color('Red Emperor', 'yellow'));
+    console.log('[CLIENT] CLIENT Started!');
 
     // Message log for analytic
-    client.onAnyMessage((fn) => messageLog(fn.fromMe, fn.type))
+    client.onAnyMessage((fn) => messageLog(fn.fromMe, fn.type));
 
     // Force it to keep the current session
     client.onStateChanged((state) => {
